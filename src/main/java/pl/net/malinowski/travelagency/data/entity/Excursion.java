@@ -21,17 +21,11 @@ public class Excursion {
     @Column(nullable = false)
     private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date date;
-
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "trip_id", nullable = false)
-    private Trip trip;
-
-    @OneToMany(mappedBy = "excursion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "excursions_attractions", joinColumns = @JoinColumn(name = "excursion_id"),
+            inverseJoinColumns = @JoinColumn(name = "attraction_id"))
     private Set<Attraction> attractions;
 
     @Column(name = "excursion_price", nullable = false)

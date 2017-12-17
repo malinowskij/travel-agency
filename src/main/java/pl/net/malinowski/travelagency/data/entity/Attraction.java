@@ -23,8 +23,4 @@ public class Attraction {
 
     @Column(nullable = false, name = "attraction_price")
     private BigDecimal attractionPrice;
-
-    @ManyToOne
-    @JoinColumn(name = "excursion_id", nullable = false)
-    private Excursion excursion;
 }
