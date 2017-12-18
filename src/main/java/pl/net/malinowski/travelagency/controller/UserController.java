@@ -53,6 +53,8 @@ public class UserController {
 
     @PostMapping("/register")
     public String processRegister(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        if (!user.getPassword().equals(user.getConfirmPassword()))
+            bindingResult.addError(new ObjectError("password", "Hasła muszą być identyczne"));
         if (bindingResult.hasErrors())
             return "register";
 
@@ -99,6 +101,8 @@ public class UserController {
     @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
     @PostMapping("/edit")
     public String processEditForm(@Valid @ModelAttribute("user") EditUserForm form, BindingResult result) {
+        if (!form.getPassword().equals(form.getConfirmPassword()))
+            result.addError(new ObjectError("password", "Hasła muszą być identyczne"));
         if (!userService.checkEmailAvailability(form.getEmail()))
             result.addError(new ObjectError("email", "Email istnieje w serwisie!"));
         if (result.hasErrors())
