@@ -17,13 +17,25 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
     private Date startDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
     private Date endDate;
 
+    @Column(nullable = false)
+    private String name;
+
+    private String description;
+
+    @ManyToMany
+    @JoinTable(name = "schedules_attractions", joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "attraction_id"))
+    private Set<Attraction> attractions;
+
     @ManyToOne
-    @JoinColumn(name = "excursion_id")
-    private Excursion excursion;
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
 }

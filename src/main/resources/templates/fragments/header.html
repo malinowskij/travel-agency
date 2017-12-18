@@ -49,6 +49,10 @@
                         sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/profile}">PROFIL UŻYTKOWNIKA</a>
                     </li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI() == '/admin/dashboard' ? 'active':''}"
+                        sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a th:href="@{/admin/dashboard}">PANEL ADMINISTRATORA</a>
+                    </li>
                     <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
                         sec:authorize="!isAuthenticated()">
                         <a th:href="@{/login}">LOGIN</a>

@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/").hasAnyRole("CUSTOMER")
                     .antMatchers("/user/profile").hasAnyRole("CUSTOMER", "ADMIN")
                     .antMatchers("/user/register").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
                     .formLogin().loginPage("/login").permitAll()
                 .and()

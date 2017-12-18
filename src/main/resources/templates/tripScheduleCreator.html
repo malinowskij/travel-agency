@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Planowanie podróży</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <script th:src="@{/js/jquery-ui.js}"/>
+    <script th:src="@{/js/creator-date-picker.js}"/>
+    <script th:src="@{/js/address-ajax.js}"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div id="service">
+    <div class="container">
+        <div class="row centered">
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="col-lg-12">
+                    <h1>Ułóż plan podróży!</h1>
+                    <form th:ction="@{/admin/trip/creator/schedule}" id="scheduleForm" method="post"
+                          th:object="${schedule}">
+                        <div th:if="${#fields.hasErrors('*')}"
+                             th:errors="*"
+                             class="alert alert-danger" role="alert"></div>
+
+                        <input type="hidden" th:field="*{trip}" th:value="${trip}"/>
+                        <div class="col-lg-6 col-lg-offset-3">
+                            <div class="form-group">
+                                <input type="text" placeholder="Data rozpoczęcia" th:field="*{startDate}"
+                                       id="startDate" required="true" class="form-control"
+                                       pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Data zakończenia" th:field="*{endDate}"
+                                       id="endDate" required="true" class="form-control"
+                                       pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Nazwa aktywności" th:field="*{excursion.name}"
+                                       required="true" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Opis aktywności" class="form-control" th:field="*{excursion.description}" form="scheduleForm"/>
+                            </div>
+                        </div>
+                        <input
+                                type="hidden"
+                                th:name="${_csrf.parameterName}"
+                                th:value="${_csrf.token}"/>
+                        <div class="col-lg-8 col-lg-offset-2 form-group">
+                            <input type="submit" class="btn btn-theme btn-block"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>
