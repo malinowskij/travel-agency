@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,5 +20,6 @@ public class City {
 
     @ManyToOne
     @JoinColumn(name = "state_id", nullable = false)
+    @JsonManagedReference
     private State state;
 }

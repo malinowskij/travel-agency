@@ -52713,13 +52713,4 @@ INSERT INTO cities (id, name, state_id) VALUES
   (48314, 'Summersville', 3976);
 
 INSERT INTO address (id, local_number, street, city_id, country_id, state_id) VALUES
-  (1, '15', 'Leśna', 32461, 175, 2874);
-
-INSERT INTO users (id, birth_date, email, password, address_id, first_name, last_name) VALUES
-  (1, '1995-09-23', 'jaqb_malinowski@yahoo.com', 'maliniak', 1, 'Jakub', 'Malinowski');
-
-INSERT INTO users_roles (user_id, role_id) VALUES
-  (1, 1);
-
-INSERT INTO users_roles (user_id, role_id) VALUES
-  (1, 2);
+  (5001, '15', 'Leśna', 32461, 175, 2874);

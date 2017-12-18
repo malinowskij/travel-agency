@@ -1,5 +1,7 @@
 package pl.net.malinowski.travelagency.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +22,10 @@ public class State {
 
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
+    @JsonManagedReference
     private Country country;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<City> cities;
 }
