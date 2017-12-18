@@ -52714,3 +52714,15 @@ INSERT INTO cities (id, name, state_id) VALUES
 
 INSERT INTO address (id, local_number, street, city_id, country_id, state_id) VALUES
   (5001, '15', 'Leśna', 32461, 175, 2874);
+
+INSERT INTO features (id, name) VALUES
+  (1, 'idealny dla rodzin'),
+  (2, 'rafa koralowa przy brzegu'),
+  (3, 'centrum nurkowe'),
+  (4, 'atrakcje dla dzieci'),
+  (5, 'zabawa dla całej rodziny'),
+  (6, 'atrakcje sportowe'),
+  (7, 'udogodnienia dla niepełnosprawnych'),
+  (8, 'świetne baseny, miniaquapark'),
+  (9, 'polecany dla par'),
+  (10, 'aktywny wypoczynek');

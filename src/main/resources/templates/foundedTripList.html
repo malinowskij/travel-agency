@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Znajdź wymarzoną podróż!</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <script th:src="@{/js/jquery-ui.js}"/>
+    <script th:src="@{/js/creator-date-picker.js}"/>
+    <script th:src="@{/js/address-ajax.js}"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div id="service">
+    <div class="container">
+        <div class="row">
+            <h1>Znalezione podróże wg podanych kryteriów: </h1>
+            <div class="col-lg-8">
+                <table class="table table-responsive">
+                    <tbody>
+                    <tr th:each="trip : ${tripList}">
+                        <td>
+                            <div class="col-md-3">
+                                <img src="http://via.placeholder.com/150x150"
+                                     class="rounded float-left"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 th:text="${trip.title}"></h4>
+                                Początek: <span th:text="${trip.startDate}"/> <br/>
+                                Koniec: <span th:text="${trip.endDate}"/>
+                            </div>
+                            <div class="col-md-3">
+                                <br/><br/>
+                                <ul>
+                                    <li th:each="feature : ${trip.features}">
+                                        <span th:text="${feature.name}"/>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <br/><br/>
+                                <span style="font-size: 17px; color: red;"
+                                        th:text="${trip.tripPrice} + 'zł/os'"/> <br/>
+                                *cena podstawowa
+                                <br/>
+                                <a class="btn btn-theme btn-block" th:href="@{/trip/} + ${trip.id} ">
+                                    Szczegóły
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <h3>Szukaj ponownie!</h3>
+                <form th:action="@{/trip/search}" method="get" th:object="${search}">
+                    <div class="form-group">
+                        <select class="form-control" id="country" name="country"
+                                th:field="*{country}">
+                            <option th:each="country : ${availableCountries}" th:value="${country.id}"
+                                    th:text="${country.name}"/>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Wyjazd od" th:field="*{startDate}"
+                               id="startDate" required="true" class="form-control"
+                               pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Wyjazd do" th:field="*{endDate}"
+                               id="endDate" required="true" class="form-control"
+                               pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{peopleCount}">
+                            <option th:value="1" th:text="1"/>
+                            <option th:value="2" th:text="2"/>
+                            <option th:value="3" th:text="3"/>
+                            <option th:value="4" th:text="4"/>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-theme btn-block" value="Szukaj podróży"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

@@ -25,6 +25,11 @@
 
                         <div class="col-lg-4 col-lg-offset-2">
                             <div class="form-group">
+                                <input type="text" placeholder="Tytuł podróży" th:field="*{title}"
+                                       required="true" class="form-control"/>
+                            </div>
+
+                            <div class="form-group">
                                 <input type="text" placeholder="Data rozpoczęcia" th:field="*{startDate}"
                                        id="startDate" required="true" class="form-control"
                                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
@@ -37,10 +42,6 @@
                             <div class="form-group">
                                 <input type="number" min="1" th:field="*{peopleLimit}" name="peopleLimit"
                                        class="form-control" placeholder="Liczba miejsc" required="true"/>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" th:field="*{tripPrice}" class="form-control" required="true"
-                                       placeholder="Podstawowy koszt podróży" name="tripPrice"/>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -61,11 +62,23 @@
                                 <select class="form-control" id="city" name="city" th:field="*{destinationCity}">
                                 </select>
                             </div>
+
+                            <div class="form-group">
+                                <input type="text" th:field="*{tripPrice}" class="form-control" required="true"
+                                       placeholder="Podstawowy koszt podróży" name="tripPrice"/>
+                            </div>
                         </div>
                         <input
                                 type="hidden"
                                 th:name="${_csrf.parameterName}"
                                 th:value="${_csrf.token}" />
+                        <div class="col-lg-8 col-lg-offset-2 form-group">
+                                <div th:each="feature : ${featureList}">
+                                    <input type="checkbox" th:field="*{features}" th:value="${feature.id}"
+                                           th:text="${feature.name}"/>
+                                </div>
+                        </div>
+
                         <div class="col-lg-8 col-lg-offset-2 form-group">
                             <input type="submit" class="btn btn-theme btn-block"/>
                         </div>

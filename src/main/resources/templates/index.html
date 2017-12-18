@@ -4,6 +4,10 @@
     <title>Travel Agency Main Site</title>
 
     <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <script th:src="@{/js/jquery-ui.js}"/>
+    <script th:src="@{/js/creator-date-picker.js}"/>
+    <script th:src="@{/js/address-ajax.js}"/>
 </head>
 <body>
 
@@ -16,6 +20,39 @@
                 <br/>
                 <h3>Witaj, na stronie biura podróży</h3>
                 <h1>Zarezerwuj swój wyjazd już dziś!</h1>
+            </div>
+            <div class="col-lg-4 col-lg-offset-4">
+                <form th:action="@{/trip/search}" method="get" th:object="${search}">
+                    <div class="form-group">
+                        <select class="form-control" id="country" name="country"
+                                th:field="*{country}">
+                            <option th:each="country : ${availableCountries}" th:value="${country.id}"
+                                    th:text="${country.name}"/>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Wyjazd od" th:field="*{startDate}"
+                               id="startDate" required="true" class="form-control"
+                               pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Wyjazd do" th:field="*{endDate}"
+                               id="endDate" required="true" class="form-control"
+                               pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{peopleCount}">
+                            <option th:value="1" th:text="1"/>
+                            <option th:value="2" th:text="2"/>
+                            <option th:value="3" th:text="3"/>
+                            <option th:value="4" th:text="4"/>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-theme btn-block" value="Szukaj podróży"/>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

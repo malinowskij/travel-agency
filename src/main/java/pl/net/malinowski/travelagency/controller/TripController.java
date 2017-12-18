@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.annotation.Secured;
@@ -9,10 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import pl.net.malinowski.travelagency.data.entity.Country;
-import pl.net.malinowski.travelagency.data.entity.Schedule;
-import pl.net.malinowski.travelagency.data.entity.Trip;
+import pl.net.malinowski.travelagency.controller.commands.TripSearch;
+import pl.net.malinowski.travelagency.data.entity.*;
+import pl.net.malinowski.travelagency.logic.service.interfaces.AttractionService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.CountryService;
+import pl.net.malinowski.travelagency.logic.service.interfaces.FeatureService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 
 import javax.validation.Valid;
@@ -21,20 +23,41 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@SessionAttributes({"countries", "search"})
 public class TripController {
 
     private CountryService countryService;
     private TripService tripService;
+    private AttractionService attractionService;
+    private FeatureService featureService;
 
     @Autowired
-    public TripController(CountryService countryService, TripService tripService) {
+    public TripController(CountryService countryService, TripService tripService,
+                          AttractionService attractionService, FeatureService featureService) {
         this.countryService = countryService;
         this.tripService = tripService;
+        this.attractionService = attractionService;
+        this.featureService = featureService;
     }
 
     @ModelAttribute("countries")
     public List<Country> countries() {
         return countryService.findAll();
+    }
+
+    @ModelAttribute("availableCountries")
+    public List<Country> availCountries() {
+        return countryService.findAvailableCountries();
+    }
+
+    @ModelAttribute("attractionList")
+    public List<Attraction> attractions() {
+        return attractionService.findAll();
+    }
+
+    @ModelAttribute("featureList")
+    public List<Feature> features() {
+        return featureService.findAll();
     }
 
     @Secured({"ROLE_ADMIN"})
@@ -62,6 +85,22 @@ public class TripController {
         model.addAttribute("trip", tripService.findById(tripId));
         model.addAttribute("schedule", new Schedule());
         return "tripScheduleCreator";
+    }
+
+    @GetMapping("/trip/search")
+    public String processTripSearching(@Valid @ModelAttribute("search") TripSearch search, Model model,
+                                       BindingResult result) {
+        if (result.hasErrors())
+            return "index";
+
+        model.addAttribute("tripList", tripService.searchForTrip(search));
+        return "foundedTripList";
+    }
+
+    @GetMapping("/trip/{id}")
+    public String findOneTrip(@PathVariable("id") Trip trip, Model model) {
+        model.addAttribute("trip", trip);
+        return "tripDetails";
     }
 
     @InitBinder

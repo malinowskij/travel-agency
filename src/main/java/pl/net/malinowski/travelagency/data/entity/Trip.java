@@ -3,6 +3,7 @@ package pl.net.malinowski.travelagency.data.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Future;
@@ -20,6 +21,10 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @NotEmpty
+    private String title;
 
     @NotNull
     @ManyToOne
@@ -54,4 +59,9 @@ public class Trip {
     @JoinTable(name = "trips_schedules", joinColumns = @JoinColumn(name = "trip_id"),
             inverseJoinColumns = @JoinColumn(name = "schedule_id"))
     private Set<Schedule> schedules;
+
+    @ManyToMany
+    @JoinTable(name = "trips_features", joinColumns = @JoinColumn(name = "trip_id"),
+            inverseJoinColumns = @JoinColumn(name = "feature_id"))
+    private Set<Feature> features;
 }

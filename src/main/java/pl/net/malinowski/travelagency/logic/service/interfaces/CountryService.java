@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface CountryService {
     List<Country> findAll();
+
     Country findById(Long id);
+
+    List<Country> findAvailableCountries();
 }
