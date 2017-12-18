@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Aktualizacja danych osobowych</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <script th:src="@{/js/address-ajax.js}"/>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <script th:src="@{/js/jquery-ui.js}"/>
+    <script th:src="@{/js/birth-date-picker.js}"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div id="service">
+    <div class="container">
+        <div class="row centered">
+            <div sec:authorize="isAuthenticated()">
+                <h1>Aktualizuj dane osobowe!</h1>
+                <div class="col-md-8 col-md-offset-2">
+                    <form th:action="@{/user/edit}" method="post" class="form" th:object="${user}">
+                        <div th:if="${#fields.hasErrors('*')}"
+                             th:errors="*"
+                             class="alert alert-danger" role="alert"></div>
+
+                        <div class="col-md-6">
+                            <input type="hidden" th:field="*{id}" th:value="*{id}"/>
+                            <input type="hidden" th:field="*{address.id}" th:value="*{address.id}"/>
+                            <div class="form-group input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+                                <input type="text" th:field="*{firstName}"
+                                       placeholder="Imie" class="form-control" required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+
+                            <div class="form-group input-group has-feedback">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+                                <input type="text" th:field="*{lastName}"
+                                       placeholder="Nazwisko" class="form-control" required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+
+                            <div class="form-group input-group has-feedback">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </span>
+
+                                <input type="email" th:field="*{email}"
+                                       placeholder="Email" class="form-control"
+                                       required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+
+                            <div class="form-group input-group has-feedback">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+
+                                <input type="password" th:field="*{password}"
+                                       placeholder="Hasło" class="form-control" required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+
+                            <div class="form-group input-group has-feedback">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+
+                                <input type="password" th:field="*{confirmPassword}"
+                                       placeholder="Potwierdź hasło" class="form-control" required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+
+                            <div class="form-group input-group has-feedback">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+
+                                <input type="text" th:field="*{telNumber}"
+                                       placeholder="Numer telefonu" class="form-control" required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select class="form-control" id="country" name="country" th:field="*{address.country}">
+                                    <option th:each="country : ${countries}" th:value="${country.id}"
+                                            th:text="${country.name}"/>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select class="form-control" id="state" name="state" th:field="*{address.state}">
+                                    <option th:value="*{address.state.id}" th:text="*{address.state.name}"/>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select class="form-control" id="city" name="city" th:field="*{address.city}">
+                                    <option th:value="*{address.city.id}" th:text="*{address.city.name}"/>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" th:field="*{address.street}" name="street" required="true"
+                                       placeholder="Ulica"/>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" type="text" th:field="*{address.localNumber}" name="localNumber" required="true"
+                                       placeholder="Numer domu/lokalu"/>
+                            </div>
+
+                            <div class="form-group input-group has-feedback">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+
+                                <input type="text" th:field="*{birthDate}"
+                                       pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"
+                                       id="birthDate"
+                                       placeholder="Data urodzenia" class="form-control" required="true"/>
+                                <span class="glyphicon form-control-feedback"
+                                      aria-hidden="true"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-theme btn-block" value="Aktualizuj"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

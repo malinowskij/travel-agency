@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
 import pl.net.malinowski.travelagency.data.entity.Address;
 import pl.net.malinowski.travelagency.data.entity.Role;
 import pl.net.malinowski.travelagency.data.entity.User;
@@ -65,5 +66,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateAddress(Long addressId, Long userId) {
         userRepository.updateAddress(addressId, userId);
+    }
+
+    @Override
+    public EditUserForm mapUserToEditUserForm(User user) {
+        return new EditUserForm(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.getPassword(), null, user.getBirthDate(), user.getTelNumber(), user.getAddress());
+    }
+
+    @Override
+    public User mapEditUserFormToUser(EditUserForm form) {
+        return new User(form.getId(), form.getFirstName(), form.getLastName(), form.getEmail(),
+                form.getPassword(), form.getConfirmPassword(), form.getBirthDate(), form.getTelNumber(), form.getAddress());
     }
 }

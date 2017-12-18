@@ -47,6 +47,13 @@
                             </a>
                         </td>
                     </tr>
+                    <tr th:if="${user.address != null}">
+                        <td>
+                            <a th:href="@{/user/edit}" class="btn btn-theme btn-block">
+                                Zmień dane osobowe
+                            </a>
+                        </td>
+                    </tr>
                     <!-- <tr>
                          <td>
                              <a th:href="@{/user/edit}" class="btn btn-theme btn-block">

@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
 import pl.net.malinowski.travelagency.data.entity.Address;
 import pl.net.malinowski.travelagency.data.entity.Country;
 import pl.net.malinowski.travelagency.data.entity.User;
@@ -79,6 +80,23 @@ public class UserController {
         address = addressService.save(address);
         User user = userService.getLoggedInUser();
         userService.updateAddress(address.getId(), user.getId());
+        return "redirect:/user/profile";
+    }
+
+    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @GetMapping("/edit")
+    public String showEditForm(Model model) {
+        model.addAttribute("user", userService.mapUserToEditUserForm(userService.getLoggedInUser()));
+        model.addAttribute("countries", countryService.findAll());
+        return "editUserForm";
+    }
+
+    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @PostMapping("/edit")
+    public String processEditForm(@Valid @ModelAttribute("user") EditUserForm form, BindingResult result) {
+        if (result.hasErrors())
+            return "editUserForm";
+        userService.update(userService.mapEditUserFormToUser(form));
         return "redirect:/user/profile";
     }
 

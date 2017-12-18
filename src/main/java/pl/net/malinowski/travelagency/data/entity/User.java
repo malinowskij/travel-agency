@@ -48,8 +48,6 @@ public class User {
     @Column(nullable = false, length = 64)
     private String password;
 
-    @NotNull
-    @NotEmpty
     @Transient
     private String confirmPassword;
 
@@ -71,4 +69,16 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
+    public User(Long id, String firstName, String lastName, String email, String password,
+                String confirmPassword, Date birthDate, String telNumber, Address address) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.birthDate = birthDate;
+        this.telNumber = telNumber;
+        this.address = address;
+    }
 }
