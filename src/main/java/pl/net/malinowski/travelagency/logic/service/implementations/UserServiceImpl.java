@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -71,12 +72,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public EditUserForm mapUserToEditUserForm(User user) {
         return new EditUserForm(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                user.getPassword(), null, user.getBirthDate(), user.getTelNumber(), user.getAddress());
+                user.getPassword(), null, user.getBirthDate(), user.getTelNumber(), user.getAddress(), user.getRoles());
     }
 
     @Override
     public User mapEditUserFormToUser(EditUserForm form) {
         return new User(form.getId(), form.getFirstName(), form.getLastName(), form.getEmail(),
-                form.getPassword(), form.getConfirmPassword(), form.getBirthDate(), form.getTelNumber(), form.getAddress());
+                form.getPassword(), form.getConfirmPassword(), form.getBirthDate(), form.getTelNumber(), form.getAddress(), form.getRoles());
+    }
+
+    @Override
+    public boolean checkEmailAvailability(String email) {
+        return userRepository.countUserWithEmail(email, getLoggedInUser().getEmail()) == 0;
     }
 }

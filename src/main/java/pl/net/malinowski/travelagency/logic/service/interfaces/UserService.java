@@ -15,4 +15,5 @@ public interface UserService {
     void updateAddress(Long addressId, Long userId);
     EditUserForm mapUserToEditUserForm(User user);
     User mapEditUserFormToUser(EditUserForm form);
+    boolean checkEmailAvailability(String email);
 }

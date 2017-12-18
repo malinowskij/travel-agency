@@ -14,6 +14,7 @@ $(document).ready(function () {
             type: "GET",
             success: function (response) {
                 $('#state').empty();
+                $('#city').empty();
                 for (item in response) {
                     $('#state').append($('<option>', {
                         value: response[item].id,

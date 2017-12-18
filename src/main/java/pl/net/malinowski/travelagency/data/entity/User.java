@@ -70,7 +70,7 @@ public class User {
     private Address address;
 
     public User(Long id, String firstName, String lastName, String email, String password,
-                String confirmPassword, Date birthDate, String telNumber, Address address) {
+                String confirmPassword, Date birthDate, String telNumber, Address address, Set<Role> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -80,5 +80,7 @@ public class User {
         this.birthDate = birthDate;
         this.telNumber = telNumber;
         this.address = address;
+        this.roles = roles;
     }
+
 }

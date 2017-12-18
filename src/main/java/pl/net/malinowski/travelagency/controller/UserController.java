@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -36,6 +38,11 @@ public class UserController {
         this.userService = userService;
         this.countryService = countryService;
         this.addressService = addressService;
+    }
+
+    @ModelAttribute("countries")
+    public List<Country> countryList() {
+        return countryService.findAll();
     }
 
     @GetMapping("/register")
@@ -67,7 +74,6 @@ public class UserController {
         if (user.getAddress() != null)
             model.addAttribute("address", user.getAddress());
         model.addAttribute("address", new Address());
-        model.addAttribute("countries", countryService.findAll());
         return "addressForm";
     }
 
@@ -87,16 +93,18 @@ public class UserController {
     @GetMapping("/edit")
     public String showEditForm(Model model) {
         model.addAttribute("user", userService.mapUserToEditUserForm(userService.getLoggedInUser()));
-        model.addAttribute("countries", countryService.findAll());
         return "editUserForm";
     }
 
     @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
     @PostMapping("/edit")
     public String processEditForm(@Valid @ModelAttribute("user") EditUserForm form, BindingResult result) {
+        if (!userService.checkEmailAvailability(form.getEmail()))
+            result.addError(new ObjectError("email", "Email istnieje w serwisie!"));
         if (result.hasErrors())
             return "editUserForm";
-        userService.update(userService.mapEditUserFormToUser(form));
+
+        userService.save(userService.mapEditUserFormToUser(form));
         return "redirect:/user/profile";
     }
 

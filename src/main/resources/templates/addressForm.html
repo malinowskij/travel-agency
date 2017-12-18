@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <title>Rejestracja</title>
+    <title>Uzupełnij dane adresowe!</title>
     <div th:replace="fragments/header :: header-css"/>
     <script th:src="@{/js/address-ajax.js}"/>
 </head>
@@ -13,7 +13,7 @@
     <div class="container">
         <div class="row centered">
             <div sec:authorize="isAuthenticated()">
-                <h1>Zarejestruj się!</h1>
+                <h1>Uzupełnij dane adresowe!</h1>
                 <div class="col-md-4 col-md-offset-4">
                     <form th:action="@{/user/address}" method="post" class="form" th:object="${address}">
                         <div th:if="${#fields.hasErrors('*')}"
