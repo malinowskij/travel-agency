@@ -1,9 +1,9 @@
 $(function () {
     $.datepicker.regional['pl']
     var dateToday = new Date();
-    dateToday.setDate(dateToday.getDate() + 7);
+    //dateToday.setDate(dateToday.getDate() + 7);
     var dateToday2 = new Date();
-    dateToday2.setDate(dateToday.getDate() + 8);
+    dateToday2.setDate(dateToday.getDate() + 1);
     var dateFormat = "dd-mm-yy",
         from = $("#startDate")
             .datepicker({

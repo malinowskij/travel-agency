@@ -17,6 +17,7 @@ import pl.net.malinowski.travelagency.data.entity.Address;
 import pl.net.malinowski.travelagency.data.entity.Country;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.logic.service.interfaces.AddressService;
+import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.CountryService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
 
@@ -32,12 +33,15 @@ public class UserController {
     private UserService userService;
     private CountryService countryService;
     private AddressService addressService;
+    private BookingService bookingService;
 
     @Autowired
-    public UserController(UserService userService, CountryService countryService, AddressService addressService) {
+    public UserController(UserService userService, CountryService countryService,
+                          AddressService addressService, BookingService bookingService) {
         this.userService = userService;
         this.countryService = countryService;
         this.addressService = addressService;
+        this.bookingService = bookingService;
     }
 
     @ModelAttribute("countries")
@@ -65,7 +69,9 @@ public class UserController {
     @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
     @GetMapping("/profile")
     public String userProfile(Model model) {
-        model.addAttribute("user", userService.getLoggedInUser());
+        User usr = userService.getLoggedInUser();
+        model.addAttribute("user", usr);
+        model.addAttribute("bookings", bookingService.findByUser(usr));
         return "userProfile";
     }
 

@@ -66,6 +66,26 @@
                      </tr> -->
                 </table>
             </div>
+            <div class="col-lg-8">
+                <div th:if="${bookings != null}">
+                    <table class="table table-responsive">
+                        <thead>
+                        <th>Nazwa podróży</th>
+                        <th>Miejsce docelowe</th>
+                        <th>Data pobytu od - do</th>
+                        <th>Liczba osób</th>
+                        </thead>
+                        <tbody>
+                        <tr th:each="booking : ${bookings}">
+                            <td th:text="${booking.trip.title}"/>
+                            <td th:text="${booking.trip.destinationCountry.name + ', ' + booking.trip.destinationCity.name}"/>
+                            <td th:text="${#dates.format(booking.trip.startDate, 'dd-MM-yyyy') + ' - ' + #dates.format(booking.trip.endDate, 'dd-MM-yyyy')}"/>
+                            <td th:text="${booking.peopleQuantity}"/>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
