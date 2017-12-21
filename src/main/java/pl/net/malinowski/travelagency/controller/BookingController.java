@@ -33,7 +33,7 @@ public class BookingController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
-    @PostMapping("/book")
+    @GetMapping("/book")
     public String processBooking(@Valid @ModelAttribute("search") TripSearch search, BindingResult result,
                                  Model model) {
         if (result.hasErrors())

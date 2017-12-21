@@ -10,8 +10,11 @@ import pl.net.malinowski.travelagency.data.entity.Trip;
 import pl.net.malinowski.travelagency.data.repository.TripRepository;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class TripServiceImpl implements TripService {
@@ -41,7 +44,9 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<Trip> searchForTrip(TripSearch search) {
         return tripRepository.findAvailableTrips(search.getStartDate(), search.getEndDate(),
-                search.getCountry().getId(), search.getPeopleCount());
+                search.getCountry().getId(), search.getPeopleCount())
+                .stream().filter(t -> t.getPeopleLimit() >= search.getPeopleCount())
+                .collect(Collectors.toList());
     }
 
     @Override

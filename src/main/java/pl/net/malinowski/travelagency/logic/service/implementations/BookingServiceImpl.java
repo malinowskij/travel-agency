@@ -27,8 +27,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking save(Booking booking) {
-        if (!tripService.hasTripFreePlaces(booking.getTrip().getId(), booking.getPeopleQuantity()))
-            throw new TripHasNotFreePlaces();
+        if (!tripService.hasTripFreePlaces(booking.getTrip().getId(), booking.getPeopleQuantity())
+                || booking.getTrip().getPeopleLimit() < booking.getPeopleQuantity())
+            throw new TripHasNotFreePlaces(booking);
         booking.setBookingDate(new Date());
         return bookingRepository.save(booking);
     }

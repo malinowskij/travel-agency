@@ -17,6 +17,11 @@
         <div class="row">
             <h1>Znalezione podróże wg podanych kryteriów: </h1>
             <div class="col-lg-8">
+                <div th:if="${param.cantBook != null}" class="alert alert-danger">
+                    Nie można zarezerwować wybranej podrózy, powodem może być brak wolnych miejsc dla
+                    wybranej ilości osób, poniżej widzisz podróże z odpowiednią ilością
+                    wolnych miejsc! Powodzenia!
+                </div>
                 <table class="table table-responsive">
                     <tbody>
                     <tr th:each="trip : ${tripList}">

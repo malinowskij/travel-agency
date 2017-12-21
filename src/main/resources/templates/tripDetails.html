@@ -87,7 +87,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <form th:action="@{/booking/book}" method="post" th:object="${search}">
+                            <form th:action="@{/booking/book}" method="get" th:object="${search}">
                                 <input type="hidden" th:field="*{country}" th:value="*{country}"/>
                                 <input type="hidden" th:field="*{startDate}" th:value="*{startDate}"/>
                                 <input type="hidden" th:field="*{endDate}" th:value="*{endDate}"/>
