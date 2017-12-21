@@ -102,11 +102,4 @@ public class TripController {
         model.addAttribute("trip", trip);
         return "tripDetails";
     }
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        sdf.setLenient(true);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-    }
 }

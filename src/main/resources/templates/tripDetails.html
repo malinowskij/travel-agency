@@ -18,8 +18,8 @@
             <h1>Wybrana podróż: </h1>
             <div class="col-lg-8">
                 <h3 th:text="${trip.title}"/>
-                    <img src="http://via.placeholder.com/800x350"
-                         class="rounded img-responsive"/>
+                <img src="http://via.placeholder.com/800x350"
+                     class="rounded img-responsive"/>
 
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home">Podstawowe informacje</a></li>
@@ -62,9 +62,9 @@
                     <div id="menu1" class="tab-pane fade">
                         <h3>Cechy podróży</h3>
                         <ul>
-                           <li th:each="feature : ${trip.features}">
-                               <span th:text="${feature.name}"/>
-                           </li>
+                            <li th:each="feature : ${trip.features}">
+                                <span th:text="${feature.name}"/>
+                            </li>
                         </ul>
                     </div>
                     <div id="menu2" class="tab-pane fade">
@@ -88,10 +88,11 @@
                     <tr>
                         <td colspan="2">
                             <form th:action="@{/booking/book}" method="post" th:object="${search}">
+                                <input type="hidden" th:field="*{country}" th:value="*{country}"/>
                                 <input type="hidden" th:field="*{startDate}" th:value="*{startDate}"/>
                                 <input type="hidden" th:field="*{endDate}" th:value="*{endDate}"/>
                                 <input type="hidden" th:field="*{peopleCount}" th:value="*{peopleCount}"/>
-                                <input type="hidden" th:field="*{tripId}" th:value="${trip.id}"/>
+                                <input type="hidden" th:value="${trip.id}" name="tripId" id="tripId"/>
                                 <input type="submit" value="Rezerwuj!" class="btn btn-theme btn-block"/>
                             </form>
                         </td>
