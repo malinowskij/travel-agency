@@ -43,4 +43,9 @@ public class TripServiceImpl implements TripService {
         return tripRepository.findAvailableTrips(search.getStartDate(), search.getEndDate(),
                 search.getCountry().getId(), search.getPeopleCount());
     }
+
+    @Override
+    public boolean hasTripFreePlaces(Long tripId, int peopleQuantity) {
+        return tripRepository.hasFreePlaces(tripId, peopleQuantity).size() != 0;
+    }
 }

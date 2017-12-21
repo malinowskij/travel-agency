@@ -22,4 +22,13 @@ public interface TripRepository extends PagingAndSortingRepository<Trip, Long> {
             "HAVING SUM(bookings.people_quantity) < (trips.people_limit - ?4) " +
             " OR SUM(bookings.people_quantity) IS NULL", nativeQuery = true)
     List<Trip> findAvailableTrips(Date startDate, Date endDate, Long countryId, int peopleCount);
+
+    @Query(value = "SELECT trips.* FROM trips " +
+            "  LEFT JOIN bookings " +
+            "  ON bookings.trip_id = trips.id " +
+            "WHERE trips.id = ?1 " +
+            "GROUP BY trips.id, bookings.id " +
+            "HAVING SUM(bookings.people_quantity) < (trips.people_limit - ?2) " +
+            "OR bookings.id IS NULL", nativeQuery = true)
+    List<Trip> hasFreePlaces(Long tripId, int peopleQuantity);
 }

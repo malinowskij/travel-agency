@@ -3,25 +3,33 @@ package pl.net.malinowski.travelagency.logic.service.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
+import pl.net.malinowski.travelagency.controller.exceptions.TripHasNotFreePlaces;
 import pl.net.malinowski.travelagency.data.entity.Booking;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.data.repository.BookingRepository;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
+import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class BookingServiceImpl implements BookingService {
 
     private BookingRepository bookingRepository;
+    private TripService tripService;
 
     @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository, TripService tripService) {
         this.bookingRepository = bookingRepository;
+        this.tripService = tripService;
     }
 
     @Override
     public Booking save(Booking booking) {
+        if (!tripService.hasTripFreePlaces(booking.getTrip().getId(), booking.getPeopleQuantity()))
+            throw new TripHasNotFreePlaces();
+        booking.setBookingDate(new Date());
         return bookingRepository.save(booking);
     }
 
@@ -37,6 +45,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking buildBooking(TripSearch search, User user) {
-        return null;
+        return new Booking(user, tripService.findById(search.getTripId()), search.getPeopleCount());
     }
 }

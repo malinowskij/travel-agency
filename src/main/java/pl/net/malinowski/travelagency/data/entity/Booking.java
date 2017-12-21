@@ -30,4 +30,10 @@ public class Booking {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "booking_date", nullable = false)
     private Date bookingDate;
+
+    public Booking(User customer, Trip trip, Integer peopleQuantity) {
+        this.customer = customer;
+        this.trip = trip;
+        this.peopleQuantity = peopleQuantity;
+    }
 }

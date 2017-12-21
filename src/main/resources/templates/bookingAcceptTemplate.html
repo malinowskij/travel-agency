@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Detale rezerwacji!</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div id="service">
+    <div class="container">
+        <div class="row">
+            <h1>Wybrana podróż: </h1>
+            <div class="col-lg-4">
+                <h3>Zamawiający:</h3>
+                <table class="table table-responsive">
+                    <tbody>
+                    <tr>
+                        <td th:text="${booking.customer.firstName + ' ' + booking.customer.lastName}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="${booking.customer.email}"/>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <table class="table table-responsive">
+                    <h3>Podróż:</h3>
+                    <tbody>
+                    <tr>
+                        <td th:text="${booking.trip.title}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="${booking.trip.destinationCity.name} + ', ' + ${booking.trip.destinationCountry.name}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="${'od ' + #dates.format(booking.trip.startDate, 'dd-MM-yyyy')} + ' do ' +
+                                        ${#dates.format(booking.trip.endDate, 'dd-MM-yyyy')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <table class="table table-responsive">
+                    <h3>Podsumowanie:</h3>
+                    <tbody>
+                    <tr>
+                        <td>Cena za osobę</td>
+                        <td th:text="${booking.trip.tripPrice + 'zł'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Liczba osób</td>
+                        <td th:text="${booking.peopleQuantity}"></td>
+                    </tr>
+                    <tr>
+                        <td>Całkowity koszt podstawowy*</td>
+                        <td th:text="${booking.trip.tripPrice} * ${booking.peopleQuantity} + ${'zł'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form th:action="@{/booking/book/accept}" th:object="${booking}" method="post">
+                    <input type="hidden" th:field="*{customer}"/>
+                    <input type="hidden" th:field="*{trip}"/>
+                    <input type="hidden" th:field="*{peopleQuantity}"/>
+                    <input type="submit" value="Rezerwuję!" class="btn btn-theme btn-block"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

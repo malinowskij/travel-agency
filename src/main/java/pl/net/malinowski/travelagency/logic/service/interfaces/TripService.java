@@ -11,4 +11,6 @@ public interface TripService {
     Trip findById(Long id);
     boolean validateDate(Trip trip);
     List<Trip> searchForTrip(TripSearch search);
+
+    boolean hasTripFreePlaces(Long tripId, int peopleQuantity);
 }
