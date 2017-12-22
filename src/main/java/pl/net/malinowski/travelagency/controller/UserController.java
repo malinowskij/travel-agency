@@ -16,10 +16,7 @@ import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
 import pl.net.malinowski.travelagency.data.entity.Address;
 import pl.net.malinowski.travelagency.data.entity.Country;
 import pl.net.malinowski.travelagency.data.entity.User;
-import pl.net.malinowski.travelagency.logic.service.interfaces.AddressService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.CountryService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
+import pl.net.malinowski.travelagency.logic.service.interfaces.*;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -34,14 +31,17 @@ public class UserController {
     private CountryService countryService;
     private AddressService addressService;
     private BookingService bookingService;
+    private EmailService emailService;
 
     @Autowired
     public UserController(UserService userService, CountryService countryService,
-                          AddressService addressService, BookingService bookingService) {
+                          AddressService addressService, BookingService bookingService,
+                          EmailService emailService) {
         this.userService = userService;
         this.countryService = countryService;
         this.addressService = addressService;
         this.bookingService = bookingService;
+        this.emailService = emailService;
     }
 
     @ModelAttribute("countries")
@@ -63,6 +63,8 @@ public class UserController {
             return "register";
 
         user = userService.save(user);
+        emailService.sendWelcomeMessage(user);
+
         return "redirect:/login";
     }
 
