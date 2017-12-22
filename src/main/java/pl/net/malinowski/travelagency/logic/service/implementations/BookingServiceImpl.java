@@ -9,6 +9,7 @@ import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.data.repository.BookingRepository;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
+import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
 
 import java.util.Date;
 import java.util.List;

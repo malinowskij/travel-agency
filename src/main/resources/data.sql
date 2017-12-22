@@ -1,5 +1,5 @@
 insert INTO roles (id, name) VALUES
-  (1, 'ROLE_CUSTOMER'),
+  (1, 'ROLE_USER'),
   (2, 'ROLE_ADMIN');
 
 INSERT INTO countries (id, sort_name, name, phone_code) VALUES

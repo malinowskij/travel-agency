@@ -13,6 +13,7 @@ import pl.net.malinowski.travelagency.data.entity.Booking;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
+import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -25,14 +26,17 @@ public class BookingController {
 
     private BookingService bookingService;
     private UserService userService;
+    private EmailService emailService;
 
     @Autowired
-    public BookingController(BookingService bookingService, UserService userService) {
+    public BookingController(BookingService bookingService, UserService userService,
+                             EmailService emailService) {
         this.bookingService = bookingService;
         this.userService = userService;
+        this.emailService = emailService;
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/book")
     public String processBooking(@Valid @ModelAttribute("search") TripSearch search, BindingResult result,
                                  Model model) {
@@ -47,13 +51,14 @@ public class BookingController {
         return "bookingAcceptTemplate";
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping("/book/accept")
     public String acceptedBookingProcess(@Valid @ModelAttribute("booking") Booking booking, BindingResult result) {
         if (result.hasErrors())
             return "bookingAcceptTemplate";
 
-        bookingService.save(booking);
+        booking = bookingService.save(booking);
+        emailService.sendBookingMessage(booking);
 
         return "redirect:/user/profile";
     }

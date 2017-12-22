@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        user.setRoles(new HashSet<>(Arrays.asList(roleService.findByName(Role.Type.ROLE_CUSTOMER))));
+        user.setRoles(new HashSet<>(Arrays.asList(roleService.findByName(Role.Type.ROLE_USER))));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

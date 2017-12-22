@@ -26,7 +26,7 @@ public class Role implements GrantedAuthority {
     }
 
     public enum Type {
-        ROLE_CUSTOMER,
+        ROLE_USER,
         ROLE_ADMIN
     }
 }

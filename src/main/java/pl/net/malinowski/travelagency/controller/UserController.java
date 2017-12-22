@@ -62,7 +62,7 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/profile")
     public String userProfile(Model model) {
         User usr = userService.getLoggedInUser();
@@ -71,7 +71,7 @@ public class UserController {
         return "userProfile";
     }
 
-    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/address")
     public String showAddressForm(Model model) {
         User user = userService.getLoggedInUser();
@@ -81,7 +81,7 @@ public class UserController {
         return "addressForm";
     }
 
-    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping("/address")
     public String processAddress(@Valid @ModelAttribute("address") Address address, BindingResult result) {
         if (result.hasErrors())
@@ -93,14 +93,14 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
-    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/edit")
     public String showEditForm(Model model) {
         model.addAttribute("user", userService.mapUserToEditUserForm(userService.getLoggedInUser()));
         return "editUserForm";
     }
 
-    @Secured({"ROLE_CUSTOMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping("/edit")
     public String processEditForm(@Valid @ModelAttribute("user") EditUserForm form, BindingResult result) {
         if (!form.getPassword().equals(form.getConfirmPassword()))
