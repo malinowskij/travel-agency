@@ -1,26 +1,20 @@
 package pl.net.malinowski.travelagency.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
 import pl.net.malinowski.travelagency.data.entity.Address;
 import pl.net.malinowski.travelagency.data.entity.Country;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.logic.service.interfaces.*;
+import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Controller

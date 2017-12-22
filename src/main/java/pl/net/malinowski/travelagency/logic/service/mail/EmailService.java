@@ -1,4 +1,4 @@
-package pl.net.malinowski.travelagency.logic.service.interfaces;
+package pl.net.malinowski.travelagency.logic.service.mail;
 
 import pl.net.malinowski.travelagency.data.entity.User;
 
