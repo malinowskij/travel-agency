@@ -54,16 +54,6 @@
                             </a>
                         </td>
                     </tr>
-                    <!-- <tr>
-                         <td>
-                             <a th:href="@{/user/edit}" class="btn btn-theme btn-block">
-                                 Edytuj dane osobowe
-                             </a>
-                         </td>
-                         <td>
-
-                         </td>
-                     </tr> -->
                 </table>
             </div>
             <div class="col-lg-8">
@@ -74,6 +64,9 @@
                         <th>Miejsce docelowe</th>
                         <th>Data pobytu od - do</th>
                         <th>Liczba osób</th>
+                        <th>Data rezerwacji</th>
+                        <th>Modyfikuj</th>
+                        <th>Anuluj</th>
                         </thead>
                         <tbody>
                         <tr th:each="booking : ${bookings}">
@@ -81,6 +74,17 @@
                             <td th:text="${booking.trip.destinationCountry.name + ', ' + booking.trip.destinationCity.name}"/>
                             <td th:text="${#dates.format(booking.trip.startDate, 'dd-MM-yyyy') + ' - ' + #dates.format(booking.trip.endDate, 'dd-MM-yyyy')}"/>
                             <td th:text="${booking.peopleQuantity}"/>
+                            <td th:text="${#dates.format(booking.bookingDate, 'dd-MM-yyyy hh:mm:ss')}"></td>
+                            <td>
+                                <a th:href="@{/#}" class="btn btn-theme btn-block">
+                                    Zmień
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="@{/#}" class="btn btn-theme btn-block">
+                                    Anuluj
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
