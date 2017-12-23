@@ -66,7 +66,7 @@ public class BookingController {
         if (!bookingService.checkUserPrivilegesForBooking(booking, user))
             throw new AccessDeniedException(user.getFirstName() + " nie posiadasz uprawnień do oglądania tego zasobu!");
 
-
+        model.addAttribute(booking);
 
         return "redirect:/";
     }

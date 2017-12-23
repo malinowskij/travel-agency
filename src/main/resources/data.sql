@@ -2,6 +2,8 @@ insert INTO roles (id, name) VALUES
   (1, 'ROLE_USER'),
   (2, 'ROLE_ADMIN');
 
+INSERT INTO drives (id, name) VALUES (1, 'Własny'), (2, 'Samolotem'), (3, 'Autobusem');
+
 INSERT INTO countries (id, sort_name, name, phone_code) VALUES
 (1, 'AF', 'Afghanistan', 93),
 (2, 'AL', 'Albania', 355),

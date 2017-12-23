@@ -14,10 +14,7 @@ import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
 import pl.net.malinowski.travelagency.data.entity.*;
 import pl.net.malinowski.travelagency.logic.service.file.FileService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.AttractionService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.CountryService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.FeatureService;
-import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
+import pl.net.malinowski.travelagency.logic.service.interfaces.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@SessionAttributes({"countries", "search"})
+@SessionAttributes({"countries", "search", "featureList", "driveList", "attractionList"})
 public class TripController {
 
     private CountryService countryService;
@@ -34,16 +31,18 @@ public class TripController {
     private AttractionService attractionService;
     private FeatureService featureService;
     private FileService fileService;
+    private DriveService driveService;
 
     @Autowired
     public TripController(CountryService countryService, TripService tripService,
                           AttractionService attractionService, FeatureService featureService,
-                          FileService fileService) {
+                          FileService fileService, DriveService driveService) {
         this.countryService = countryService;
         this.tripService = tripService;
         this.attractionService = attractionService;
         this.featureService = featureService;
         this.fileService = fileService;
+        this.driveService = driveService;
     }
 
     @ModelAttribute("countries")
@@ -64,6 +63,11 @@ public class TripController {
     @ModelAttribute("featureList")
     public List<Feature> features() {
         return featureService.findAll();
+    }
+
+    @ModelAttribute("driveList")
+    public List<Drive> drives() {
+        return driveService.findAll();
     }
 
     @Secured({"ROLE_ADMIN"})

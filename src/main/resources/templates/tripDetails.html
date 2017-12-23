@@ -56,6 +56,10 @@
                                 <td th:text="${trip.destinationCity.name}"/>
                             </tr>
                             <tr>
+                                <td>Dojazd</td>
+                                <td th:text="${trip.drive.name}"/>
+                            </tr>
+                            <tr>
                                 <td>Cena podstawowa</td>
                                 <td th:text="${trip.tripPrice} + 'zł/os'"/>
                             </tr>

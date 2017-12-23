@@ -38,13 +38,13 @@ public class User {
 
     @EmailUnique
     @NotNull
-    @NotEmpty(message = "{user.email.notempty}")
+    @NotEmpty
     @Email
     @Column(unique = true, nullable = false, length = 64)
     private String email;
 
     @NotNull
-    @NotEmpty(message = "{user.password.notempty}")
+    @NotEmpty
     @Column(nullable = false, length = 64)
     private String password;
 

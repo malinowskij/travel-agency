@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -14,7 +15,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "trips")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class Trip {
 
@@ -63,6 +65,15 @@ public class Trip {
 
     @Column(name = "photo_path")
     private String photoPath;
+
+    @Column(name = "all_inclusive_available", nullable = false)
+    private boolean allInclusiveAvailable;
+
+    @NotNull
+    @Valid
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "drive_id")
+    private Drive drive;
 
     @ManyToMany
     @JoinTable(name = "trips_features", joinColumns = @JoinColumn(name = "trip_id"),
