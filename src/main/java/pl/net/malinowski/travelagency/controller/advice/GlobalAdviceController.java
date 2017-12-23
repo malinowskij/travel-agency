@@ -6,6 +6,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import pl.net.malinowski.travelagency.controller.exceptions.StorageNotFoundException;
 import pl.net.malinowski.travelagency.controller.exceptions.TripHasNotFreePlaces;
 import pl.net.malinowski.travelagency.data.entity.Booking;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
@@ -29,6 +30,11 @@ public class GlobalAdviceController {
                 + "&startDate=" + DateUtil.formatDate(booking.getTrip().getStartDate())
                 + "&endDate=" + DateUtil.formatDate(booking.getTrip().getEndDate())
                 + "&peopleCount=" + booking.getPeopleQuantity() + "&cantBook";
+    }
+
+    @ExceptionHandler({StorageNotFoundException.class})
+    public String handleStorageNotFoundException() {
+        return "redirect:/";
     }
 
     @InitBinder

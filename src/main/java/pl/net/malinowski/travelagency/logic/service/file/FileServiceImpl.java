@@ -8,6 +8,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageException;
+import pl.net.malinowski.travelagency.controller.exceptions.StorageNotFoundException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -55,7 +56,7 @@ public class FileServiceImpl implements FileService {
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(path -> this.rootLocation.relativize(path));
         } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
+            throw new StorageNotFoundException("Failed to read stored files", e);
         }
     }
 
@@ -72,9 +73,9 @@ public class FileServiceImpl implements FileService {
             if (resource.exists() || resource.isReadable())
                 return resource;
             else
-                throw new StorageException("Could not read file " + filename);
+                throw new StorageNotFoundException("Could not read file " + filename);
         } catch (MalformedURLException e) {
-            throw new StorageException("Could not read file " + filename, e);
+            throw new StorageNotFoundException("Could not read file " + filename, e);
         }
     }
 
@@ -88,7 +89,7 @@ public class FileServiceImpl implements FileService {
         try {
             return IOUtils.toByteArray(this.loadAsResource(filename).getInputStream());
         } catch (IOException e) {
-            throw new StorageException("Could not load file " + filename, e);
+            throw new StorageNotFoundException("Could not load file " + filename, e);
         }
     }
 }
