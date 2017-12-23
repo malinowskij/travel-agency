@@ -14,4 +14,6 @@ public interface BookingService {
     List<Booking> findByUser(User user);
 
     Booking buildBooking(TripSearch search, User user);
+
+    boolean checkUserPrivilegesForBooking(Booking booking, User loggedInUser);
 }

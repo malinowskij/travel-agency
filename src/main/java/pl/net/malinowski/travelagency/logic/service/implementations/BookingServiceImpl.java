@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.exceptions.TripHasNotFreePlaces;
 import pl.net.malinowski.travelagency.data.entity.Booking;
+import pl.net.malinowski.travelagency.data.entity.Role;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.data.repository.BookingRepository;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
@@ -48,5 +49,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking buildBooking(TripSearch search, User user) {
         return new Booking(user, tripService.findById(search.getTripId()), search.getPeopleCount());
+    }
+
+    @Override
+    public boolean checkUserPrivilegesForBooking(Booking booking, User loggedInUser) {
+        if (loggedInUser.getRoles().stream().anyMatch(r -> r.getName().equals(Role.Type.ROLE_ADMIN)))
+            return true;
+        return booking.getCustomer().getId().equals(loggedInUser.getId());
     }
 }

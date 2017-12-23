@@ -76,7 +76,7 @@
                             <td th:text="${booking.peopleQuantity}"/>
                             <td th:text="${#dates.format(booking.bookingDate, 'dd-MM-yyyy hh:mm:ss')}"></td>
                             <td>
-                                <a th:href="@{/#}" class="btn btn-theme btn-block">
+                                <a th:href="@{/booking/{id}/edit(id=${booking.id})}" class="btn btn-theme btn-block">
                                     Zmień
                                 </a>
                             </td>

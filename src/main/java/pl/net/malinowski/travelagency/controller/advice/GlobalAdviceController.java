@@ -1,6 +1,8 @@
 package pl.net.malinowski.travelagency.controller.advice;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.ui.Model;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,6 +37,12 @@ public class GlobalAdviceController {
     @ExceptionHandler({StorageNotFoundException.class})
     public String handleStorageNotFoundException() {
         return "redirect:/";
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public String handleAccessDeniedException(Model model) {
+        model.addAttribute("message", "Przykro nam ale nie masz dostępu do zasobu, którego żądasz!");
+        return "/errors/alertError";
     }
 
     @InitBinder
