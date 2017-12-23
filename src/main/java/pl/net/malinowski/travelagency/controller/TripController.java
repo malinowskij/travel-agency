@@ -11,12 +11,15 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
+import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
 import pl.net.malinowski.travelagency.data.entity.*;
+import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.AttractionService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.CountryService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.FeatureService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,14 +33,17 @@ public class TripController {
     private TripService tripService;
     private AttractionService attractionService;
     private FeatureService featureService;
+    private FileService fileService;
 
     @Autowired
     public TripController(CountryService countryService, TripService tripService,
-                          AttractionService attractionService, FeatureService featureService) {
+                          AttractionService attractionService, FeatureService featureService,
+                          FileService fileService) {
         this.countryService = countryService;
         this.tripService = tripService;
         this.attractionService = attractionService;
         this.featureService = featureService;
+        this.fileService = fileService;
     }
 
     @ModelAttribute("countries")
@@ -63,18 +69,24 @@ public class TripController {
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/admin/trip/creator")
     public String tripCreatorForm(Model model) {
-        model.addAttribute("trip", new Trip());
+        model.addAttribute("tripWithFile", new TripWithFile());
         return "tripCreatorForm";
     }
 
     @Secured({"ROLE_ADMIN"})
     @PostMapping("/admin/trip/creator")
-    public String processTripCreatorForm(@Valid @ModelAttribute("trip") Trip trip, BindingResult result) {
-        if (!tripService.validateDate(trip))
+    public String processTripCreatorForm(@Valid @ModelAttribute("tripWithFile") TripWithFile form, BindingResult result,
+                                         HttpServletRequest request) {
+        if (!tripService.validateDate(form.getTrip()))
             result.addError(new ObjectError("startDate", "Niepoprawne daty!"));
         if (result.hasErrors())
             return "tripCreatorForm";
 
+
+        Trip trip = form.getTrip();
+
+        String photoPath = fileService.store(form.getPhoto());
+        trip.setPhotoPath(photoPath);
         trip = tripService.save(trip);
         return "redirect:/admin/trip/creator/schedule/" + trip.getId();
     }

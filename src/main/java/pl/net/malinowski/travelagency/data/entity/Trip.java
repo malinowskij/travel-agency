@@ -60,6 +60,10 @@ public class Trip {
             inverseJoinColumns = @JoinColumn(name = "schedule_id"))
     private Set<Schedule> schedules;
 
+
+    @Column(name = "photo_path")
+    private String photoPath;
+
     @ManyToMany
     @JoinTable(name = "trips_features", joinColumns = @JoinColumn(name = "trip_id"),
             inverseJoinColumns = @JoinColumn(name = "feature_id"))

@@ -18,36 +18,41 @@
             <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <div class="col-lg-12">
                     <h1>Kreator podróży</h1>
-                    <form th:ction="@{/admin/trip/creator}" method="post" th:object="${trip}">
+                    <form th:ction="@{/admin/trip/creator}" method="post" th:object="${tripWithFile}" enctype="multipart/form-data">
                         <div th:if="${#fields.hasErrors('*')}"
                              th:errors="*"
                              class="alert alert-danger" role="alert"></div>
 
                         <div class="col-lg-4 col-lg-offset-2">
                             <div class="form-group">
-                                <input type="text" placeholder="Tytuł podróży" th:field="*{title}"
+                                <input type="text" placeholder="Tytuł podróży" th:field="*{trip.title}"
                                        required="true" class="form-control"/>
                             </div>
 
                             <div class="form-group">
-                                <input type="text" placeholder="Data rozpoczęcia" th:field="*{startDate}"
+                                <input type="text" placeholder="Data rozpoczęcia" th:field="*{trip.startDate}"
                                        id="startDate" required="true" class="form-control"
                                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
                             </div>
                             <div class="form-group">
-                                <input type="text" placeholder="Data zakończenia" th:field="*{endDate}"
+                                <input type="text" placeholder="Data zakończenia" th:field="*{trip.endDate}"
                                        id="endDate" required="true" class="form-control"
                                        pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])-(0[1-9]|1[012])-[0-9]{4}"/>
                             </div>
                             <div class="form-group">
-                                <input type="number" min="1" th:field="*{peopleLimit}" name="peopleLimit"
+                                <input type="number" min="1" th:field="*{trip.peopleLimit}" name="peopleLimit"
                                        class="form-control" placeholder="Liczba miejsc" required="true"/>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="file" th:field="*{photo}" class="form-control" accept="image"
+                                       placeholder="Wybierz zdjęcie podróży" name="tripPrice"/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <select class="form-control" id="country" name="country"
-                                        th:field="*{destinationCountry}">
+                                        th:field="*{trip.destinationCountry}">
                                     <option th:each="country : ${countries}" th:value="${country.id}"
                                             th:text="${country.name}"/>
                                 </select>
@@ -59,12 +64,12 @@
                             </div>
 
                             <div class="form-group">
-                                <select class="form-control" id="city" name="city" th:field="*{destinationCity}">
+                                <select class="form-control" id="city" name="city" th:field="*{trip.destinationCity}">
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <input type="text" th:field="*{tripPrice}" class="form-control" required="true"
+                                <input type="text" th:field="*{trip.tripPrice}" class="form-control" required="true"
                                        placeholder="Podstawowy koszt podróży" name="tripPrice"/>
                             </div>
                         </div>
@@ -74,7 +79,7 @@
                                 th:value="${_csrf.token}" />
                         <div class="col-lg-8 col-lg-offset-2 form-group">
                                 <div th:each="feature : ${featureList}">
-                                    <input type="checkbox" th:field="*{features}" th:value="${feature.id}"
+                                    <input type="checkbox" th:field="*{trip.features}" th:value="${feature.id}"
                                            th:text="${feature.name}"/>
                                 </div>
                         </div>
