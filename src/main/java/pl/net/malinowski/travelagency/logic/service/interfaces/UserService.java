@@ -3,7 +3,7 @@ package pl.net.malinowski.travelagency.logic.service.interfaces;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
-import pl.net.malinowski.travelagency.data.entity.Address;
+import pl.net.malinowski.travelagency.controller.commands.PhraseSearch;
 import pl.net.malinowski.travelagency.data.entity.User;
 
 import java.util.List;
@@ -20,4 +20,6 @@ public interface UserService {
     boolean checkEmailAvailability(String email);
 
     Page<User> findAllPaginated(Pageable pageable);
+
+    Page<User> findByPhrasePaginated(PhraseSearch phraseSearch, Pageable pageable);
 }

@@ -3,18 +3,15 @@ package pl.net.malinowski.travelagency.logic.service.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
-import pl.net.malinowski.travelagency.data.entity.Address;
+import pl.net.malinowski.travelagency.controller.commands.PhraseSearch;
 import pl.net.malinowski.travelagency.data.entity.Role;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.data.repository.UserRepository;
-import pl.net.malinowski.travelagency.logic.principal.MyUserPrincipal;
 import pl.net.malinowski.travelagency.logic.service.interfaces.RoleService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
 
@@ -91,5 +88,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAllPaginated(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<User> findByPhrasePaginated(PhraseSearch phraseSearch, Pageable pageable) {
+        return userRepository.findByPhraseSearch("%" + phraseSearch.getPhrase() + "%", pageable);
     }
 }

@@ -6,7 +6,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.net.malinowski.travelagency.controller.commands.PhraseSearch;
 import pl.net.malinowski.travelagency.logic.service.interfaces.StatService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
 
@@ -34,8 +36,11 @@ public class AdminController {
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/user")
-    public String userList(Model model, Pageable pageable) {
-        model.addAttribute("usersList", userService.findAllPaginated(pageable));
+    public String userList(@ModelAttribute("phraseSearch") PhraseSearch phraseSearch,
+                           Model model, Pageable pageable) {
+        if (phraseSearch.getPhrase() == null) phraseSearch.setPhrase("");
+        model.addAttribute("usersList", userService.findByPhrasePaginated(phraseSearch, pageable));
+        model.addAttribute("phraseSearch", phraseSearch);
         return "usersList";
     }
 }

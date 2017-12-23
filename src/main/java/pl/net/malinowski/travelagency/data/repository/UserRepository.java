@@ -17,6 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAll(Pageable pageable);
 
+    @Query("SELECT u FROM User u WHERE lower(u.firstName) LIKE lower(?1) " +
+            "OR lower(u.lastName) LIKE lower(?1) OR lower(u.email) LIKE lower(?1) " +
+            "OR u.telNumber LIKE lower(?1)")
+    Page<User> findByPhraseSearch(String phrase, Pageable pageable);
+
     @Query("SELECT COUNT(u) FROM User u WHERE lower(u.email) LIKE lower(?1) AND lower(u.email) NOT LIKE lower(?2)")
     int countUserWithEmail(String email, String loggedInEmail);
 
