@@ -27,4 +27,9 @@ public class AttractionServiceImpl implements AttractionService {
     public Attraction findById(Long id) {
         return attractionRepository.findOne(id);
     }
+
+    @Override
+    public Attraction save(Attraction attraction) {
+        return attractionRepository.save(attraction);
+    }
 }

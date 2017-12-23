@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Planowanie podróży</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <script th:src="@{/js/jquery-ui.js}"/>
+    <script th:src="@{/js/creator-date-picker.js}"/>
+    <script th:src="@{/js/address-ajax.js}"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div id="service">
+    <div class="container">
+        <div class="row">
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="col-lg-12">
+                    <h1>Jeszcze jeden krok!</h1>
+                    <h3>Ułóż plan podróży dla każdego dnia, bądź pozostaw podróż bez planu!</h3>
+                    <div class="col-lg-6">
+                        <table class="table table-responsive">
+                            <tr th:each="schedule : ${trip.schedules}">
+                                <td th:text="${schedule.name + ' - ' + #dates.format(schedule.date, 'dd-MM-yyyy')}"></td>
+                                <td th:text="${schedule.description}"></td>
+                                <td>
+                                   <span th:each="attr : ${schedule.attractions}">
+                                       <span th:text="${attr.name + ', '}"/>
+                                   </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <form method="POST" th:action="@{/admin/schedule}" th:object="${scheduleForm}"
+                              id="scheduleForm">
+                            <input type="hidden" name="schedule.trip" th:value="${trip.id}"/>
+                            <div class="form-group">
+                                <select th:field="*{dayNo}" class="form-control">
+                                    <option th:each="num : ${#numbers.sequence(1, daysCount)}"
+                                            th:value="${num}"
+                                            th:text="${'Dzień ' + num}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" th:field="*{schedule.name}" placeholder="Tytuł dnia"
+                                       required="true" class="form-control"/>
+                            </div>
+
+                            <div class="form-group">
+                                            <textarea placeholder="Opis dnia" class="form-control"
+                                                      th:field="*{schedule.description}" form="scheduleForm"/>
+                            </div>
+
+                            <div class="form-group">
+                                <div th:each="attraction : ${attractionList}">
+                                    <div class="col-md-4">
+                                        <input type="checkbox" th:field="*{schedule.attractions}"
+                                               th:value="${attraction.id}"
+                                               th:text="${attraction.name}" class="checkbox-inline"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="submit" class="btn btn-theme btn-block" value="Dodaj"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <a th:href="@{/admin/dashboard}" class="btn btn-theme btn-block">
+                    Zakończ tworzenie planu
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

@@ -5,29 +5,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "schedules")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "start_date")
-    private Date startDate;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end_date")
-    private Date endDate;
-
+    @NotNull
     @Column(nullable = false)
     private String name;
 
+    @NotNull
     private String description;
 
     @ManyToMany
@@ -38,4 +38,12 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;
+
+    public Schedule(Date date, String name, String description, Trip trip, Set<Attraction> attractions) {
+        this.date = date;
+        this.name = name;
+        this.description = description;
+        this.trip = trip;
+        this.attractions = attractions;
+    }
 }

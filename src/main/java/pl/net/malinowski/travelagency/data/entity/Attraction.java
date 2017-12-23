@@ -20,7 +20,4 @@ public class Attraction {
     private String name;
 
     private String description;
-
-    @Column(nullable = false, name = "attraction_price")
-    private BigDecimal attractionPrice;
 }

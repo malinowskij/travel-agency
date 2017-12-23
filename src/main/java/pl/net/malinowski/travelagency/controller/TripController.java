@@ -10,11 +10,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import pl.net.malinowski.travelagency.controller.commands.ScheduleForm;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
 import pl.net.malinowski.travelagency.data.entity.*;
 import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.*;
+import pl.net.malinowski.travelagency.logic.util.DateUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -95,15 +97,17 @@ public class TripController {
         }
 
         trip = tripService.save(trip);
+
         return "redirect:/admin/trip/creator/schedule/" + trip.getId();
     }
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/admin/trip/creator/schedule/{tripId}")
-    public String tripScheduleCreator(@PathVariable Long tripId, Model model) {
-        model.addAttribute("trip", tripService.findById(tripId));
-        model.addAttribute("schedule", new Schedule());
-        return "tripScheduleCreator";
+    public String tripScheduleCreator(@PathVariable("tripId") Trip trip, Model model) {
+        model.addAttribute("trip", trip);
+        model.addAttribute("daysCount", DateUtil.daysBetween(trip.getStartDate(), trip.getEndDate()));
+        model.addAttribute("scheduleForm", new ScheduleForm());
+        return "tripScheduleReviewer";
     }
 
     @GetMapping("/trip/search")

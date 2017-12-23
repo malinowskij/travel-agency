@@ -18,7 +18,7 @@
             <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <div class="col-lg-12">
                     <h1>Kreator podróży</h1>
-                    <form th:ction="@{/admin/trip/creator}" method="post" th:object="${tripWithFile}"
+                    <form th:action="@{/admin/trip/creator}" method="post" th:object="${tripWithFile}"
                           enctype="multipart/form-data">
                         <div th:if="${#fields.hasErrors('*')}"
                              th:errors="*"

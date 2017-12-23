@@ -84,7 +84,26 @@
                     </div>
                     <div id="menu2" class="tab-pane fade">
                         <h3>Atrakcje i plany</h3>
-                        <p>TODO</p>
+                        <table th:if="${!#lists.isEmpty(trip.schedules)}" class="table table-responsive">
+                            <thead>
+                            <th>Dzień</th>
+                            <th>Data</th>
+                            <th>Opis planu dnia</th>
+                            <th>Atrakcje</th>
+                            </thead>
+                            <tbody>
+                            <tr th:each="schedule : ${trip.schedules}">
+                                <td th:text="${schedule.name}"></td>
+                                <td th:text="${#dates.format(schedule.date, 'dd-MM-yyyy')}"></td>
+                                <td th:text="${schedule.description}"></td>
+                                <td>
+                                    <ul>
+                                        <li th:each="attr : ${schedule.attractions}" th:text="${attr.name}"/>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

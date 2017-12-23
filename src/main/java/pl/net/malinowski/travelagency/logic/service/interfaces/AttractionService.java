@@ -7,4 +7,5 @@ import java.util.List;
 public interface AttractionService {
     List<Attraction> findAll();
     Attraction findById(Long id);
+    Attraction save(Attraction attraction);
 }
