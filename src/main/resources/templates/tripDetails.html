@@ -63,6 +63,14 @@
                                 <td>Cena podstawowa</td>
                                 <td th:text="${trip.tripPrice} + 'zł/os'"/>
                             </tr>
+                            <tr>
+                                <td>Dostępne all inclusive:</td>
+                                <td th:text="${trip.allInclusiveAvailable ? 'Tak' : 'Nie'}"/>
+                            </tr>
+                            <tr th:if="${trip.allInclusiveAvailable}">
+                                <td>Cena all inclusive</td>
+                                <td th:text="${trip.allInclusivePrice + 'zł'}"/>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -83,30 +91,55 @@
             <div class="col-lg-4">
                 <div th:if="${search}">
                     <h3>Rezerwacja</h3>
-                    <table class="table table-responsive">
-                        <tbody>
-                        <tr>
-                            <td>Liczba osób</td>
-                            <td th:text="${search.peopleCount}"/>
-                        </tr>
-                        <tr>
-                            <td th:text="${'Cena za ' + search.peopleCount + ' osoby'}"></td>
-                            <td th:text="${search.peopleCount} * ${trip.tripPrice} + ${'zł'}"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <form th:action="@{/booking/book}" method="get" th:object="${search}">
-                                    <input type="hidden" th:field="*{country}" th:value="*{country}"/>
-                                    <input type="hidden" th:field="*{startDate}" th:value="*{startDate}"/>
-                                    <input type="hidden" th:field="*{endDate}" th:value="*{endDate}"/>
-                                    <input type="hidden" th:field="*{peopleCount}" th:value="*{peopleCount}"/>
-                                    <input type="hidden" th:value="${trip.id}" name="tripId" id="tripId"/>
+                    <form th:action="@{/booking/book}" method="get" th:object="${search}">
+                        <table class="table table-responsive">
+                            <tbody>
+                            <tr>
+                                <td>Liczba osób</td>
+                                <td>
+                                    <div class="form-group">
+                                        <select class="form-control" th:field="*{peopleCount}" id="peopleQty">
+                                            <option th:value="1" th:text="1"/>
+                                            <option th:value="2" th:text="2"/>
+                                            <option th:value="3" th:text="3"/>
+                                            <option th:value="4" th:text="4"/>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${trip.allInclusiveAvailable}">
+                                <td>All inclusive</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="checkbox" th:field="*{allInclusive}"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <input type="hidden" th:field="*{country}" th:value="*{country}"/>
+                                <input type="hidden" th:field="*{startDate}" th:value="*{startDate}"/>
+                                <input type="hidden" th:field="*{endDate}" th:value="*{endDate}"/>
+
+                                <input type="hidden" th:value="${trip.id}" name="tripId" id="tripId"/>
+                            </tr>
+                            <tr>
+                                <td>Podstawowa cena: </td>
+                                <td th:text="${trip.tripPrice} + 'zł/os'"></td>
+                            </tr>
+                            <tr th:if="${trip.allInclusiveAvailable}">
+                                <td>Dodatkowa cena all inclusive: </td>
+                                <td th:text="${trip.allInclusivePrice} + 'zł/os'"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
                                     <input type="submit" value="Rezerwuj!" class="btn btn-theme btn-block"/>
-                                </form>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+
+
                     <h3>Szukaj ponownie!</h3>
                     <form th:action="@{/trip/search}" method="get" th:object="${search}">
                         <div class="form-group">

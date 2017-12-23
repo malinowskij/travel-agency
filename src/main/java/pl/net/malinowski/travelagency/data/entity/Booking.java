@@ -31,9 +31,13 @@ public class Booking {
     @Column(name = "booking_date", nullable = false)
     private Date bookingDate;
 
-    public Booking(User customer, Trip trip, Integer peopleQuantity) {
+    @Column(name = "all_inclusive", nullable = false)
+    private boolean allInclusive;
+
+    public Booking(User customer, Trip trip, Integer peopleQuantity, boolean allInclusive) {
         this.customer = customer;
         this.trip = trip;
         this.peopleQuantity = peopleQuantity;
+        this.allInclusive = allInclusive;
     }
 }

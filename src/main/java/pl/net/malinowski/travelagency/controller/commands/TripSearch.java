@@ -29,4 +29,6 @@ public class TripSearch {
     private int peopleCount;
 
     private Long tripId;
+
+    private boolean allInclusive;
 }

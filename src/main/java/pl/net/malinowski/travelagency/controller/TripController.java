@@ -89,8 +89,11 @@ public class TripController {
 
         Trip trip = form.getTrip();
 
-        String photoPath = fileService.store(form.getPhoto());
-        trip.setPhotoPath(photoPath);
+        if (!form.getPhoto().isEmpty()) {
+            String photoPath = fileService.store(form.getPhoto());
+            trip.setPhotoPath(photoPath);
+        }
+
         trip = tripService.save(trip);
         return "redirect:/admin/trip/creator/schedule/" + trip.getId();
     }

@@ -58,6 +58,12 @@
                         <td>Całkowity koszt podstawowy*</td>
                         <td th:text="${booking.trip.tripPrice} * ${booking.peopleQuantity} + ${'zł'}"></td>
                     </tr>
+                    <tr th:if="${booking.allInclusive}">
+                        <td>Koszt całkowity</td>
+                        <td>
+                            <span th:text="${booking.trip.tripPrice} * ${booking.peopleQuantity} + ${booking.trip.allInclusivePrice} + ${booking.peopleQuantity} + ${'zł'}"></span>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -68,6 +74,7 @@
                     <input type="hidden" th:field="*{customer}"/>
                     <input type="hidden" th:field="*{trip}"/>
                     <input type="hidden" th:field="*{peopleQuantity}"/>
+                    <input type="hidden" th:field="*{allInclusive}"/>
                     <input type="submit" value="Rezerwuję!" class="btn btn-theme btn-block"/>
                 </form>
             </div>

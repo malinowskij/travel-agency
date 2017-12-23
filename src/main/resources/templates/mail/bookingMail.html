@@ -47,19 +47,27 @@
             </h3>
         </td>
     </tr>
-    <tr>
+    <tr bgcolor="ffffff">
         <td height="100" align="center">
             <h3 th:text="${'Termin pobytu: od ' + booking.trip.startDate + ' do ' + booking.trip.endDate}"></h3>
         </td>
     </tr>
-    <tr>
+    <tr bgcolor="ffffff">
         <td height="100" align="center">
             <h3 th:text="${'Liczba osób ' + booking.peopleQuantity}"></h3>
         </td>
     </tr>
-    <tr>
+    <tr bgcolor="ffffff">
         <td height="100" align="center">
             <h3 th:text="${'Cena podstawowa: ' + booking.peopleQuantity * booking.trip.tripPrice + 'zł'}"></h3>
+        </td>
+    </tr>
+    <tr bgcolor="ffffff" th:if="${booking.allInclusive}">
+        <td height="100" align="center">
+            <h2>Cena ostateczna:</h2>
+        </td>
+        <td height="100" align="center">
+            <h2 th:text="${booking.peopleQuantity * booking.trip.tripPrice + booking.peopleQuantity * booking.trip.allInclusivePrice}"></h2>
         </td>
     </tr>
 </table>

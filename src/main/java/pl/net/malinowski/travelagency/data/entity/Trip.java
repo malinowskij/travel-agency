@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -54,6 +55,7 @@ public class Trip {
     @Column(name = "people_limit", nullable = false)
     private Integer peopleLimit;
 
+    @DecimalMin("0.0")
     @Column(nullable = false, name = "trip_price")
     private BigDecimal tripPrice;
 
@@ -68,6 +70,11 @@ public class Trip {
 
     @Column(name = "all_inclusive_available", nullable = false)
     private boolean allInclusiveAvailable;
+
+    @NotNull
+    @DecimalMin("0.0")
+    @Column(name = "all_inclusive_price", nullable = false)
+    private BigDecimal allInclusivePrice;
 
     @NotNull
     @Valid

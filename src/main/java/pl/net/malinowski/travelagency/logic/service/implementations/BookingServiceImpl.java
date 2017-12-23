@@ -48,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking buildBooking(TripSearch search, User user) {
-        return new Booking(user, tripService.findById(search.getTripId()), search.getPeopleCount());
+        return new Booking(user, tripService.findById(search.getTripId()), search.getPeopleCount(), search.isAllInclusive());
     }
 
     @Override
