@@ -1,6 +1,8 @@
 package pl.net.malinowski.travelagency.logic.service.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -84,5 +86,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkEmailAvailability(String email) {
         return userRepository.countUserWithEmail(email, getLoggedInUser().getEmail()) == 0;
+    }
+
+    @Override
+    public Page<User> findAllPaginated(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }
