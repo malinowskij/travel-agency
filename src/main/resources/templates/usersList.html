@@ -18,7 +18,7 @@
             <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <div class="col-lg-12">
                     <h1>Szukaj</h1>
-                    <form th:action="@{/admin/user}" method="GET" th:object="${phraseSearch}">
+                    <form th:action="@{/admin/user}" method="POST" th:object="${phraseSearchUser}">
                         <div class="col-md-6">
                             <input type="text" th:field="*{phrase}"
                                    placeholder="Wpisz filtr" class="form-control"/>

@@ -3,9 +3,11 @@ package pl.net.malinowski.travelagency.logic.util;
 import sun.util.resources.cldr.ta.CalendarData_ta_IN;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtil {
@@ -27,5 +29,20 @@ public class DateUtil {
         calendar.setTime(date);
         calendar.add(Calendar.DATE, days);
         return calendar.getTime();
+    }
+
+    public static Date buildDate(int d, int m, int y) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(y, m, d);
+        return calendar.getTime();
+    }
+
+    public static Date toDate(String s) {
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMAN);
+        try {
+            return format.parse(s);
+        } catch (ParseException e) {
+            return new Date();
+        }
     }
 }
