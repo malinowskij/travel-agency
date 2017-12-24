@@ -53,4 +53,19 @@ public class EmailServiceImpl implements EmailService {
         };
         javaMailSender.send(messagePreparator);
     }
+
+    @Async
+    @Override
+    public void sendCancelBookingMessage(Booking booking) {
+        String header = booking.getCustomer().getFirstName() + " anulowałeś rezerwację!";
+        String title = "Anulowanie rezerwacji podróży " + booking.getTrip().getTitle();
+
+        MimeMessagePreparator messagePreparator = mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setTo(booking.getCustomer().getEmail());
+            messageHelper.setSubject("Anulowanie rezerwacji podróży " + booking.getTrip().getTitle());
+            messageHelper.setText(mailBuilder.buildBookingCancelMail(header, title, booking), true);
+        };
+        javaMailSender.send(messagePreparator);
+    }
 }

@@ -15,7 +15,11 @@ public interface BookingService {
 
     Booking buildBooking(TripSearch search, User user);
 
-    boolean checkUserPrivilegesForBooking(Booking booking, User loggedInUser);
+    void checkPrivilegesForBooking(Booking booking, User user);
+
+    void checkIfOperationIsAvailable(Booking booking);
 
     Long countBookingsByTripId(Long tripId);
+
+    void cancelBooking(Booking booking);
 }

@@ -73,12 +73,19 @@ public class BookingController {
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}/edit")
     public String showEditBookingForm(@PathVariable("id") Booking booking, Model model) {
-        User user = userService.getLoggedInUser();
-        if (!bookingService.checkUserPrivilegesForBooking(booking, user))
-            throw new AccessDeniedException(user.getFirstName() + " nie posiadasz uprawnień do oglądania tego zasobu!");
-
+        bookingService.checkIfOperationIsAvailable(booking);
+        bookingService.checkPrivilegesForBooking(booking, userService.getLoggedInUser());
         model.addAttribute(booking);
 
         return "redirect:/";
+    }
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @GetMapping("/{id}/cancel")
+    public String cancelBooking(@PathVariable("id") Booking booking) {
+        bookingService.cancelBooking(booking);
+        emailService.sendCancelBookingMessage(booking);
+
+        return "redirect:/user/profile";
     }
 }

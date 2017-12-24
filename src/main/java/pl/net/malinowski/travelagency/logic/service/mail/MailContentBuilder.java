@@ -31,4 +31,12 @@ public class MailContentBuilder {
         context.setVariable("booking", booking);
         return templateEngine.process("/mail/bookingMail", context);
     }
+
+    public String buildBookingCancelMail(String header, String title, Booking booking) {
+        Context context = new Context();
+        context.setVariable("header", header);
+        context.setVariable("title", title);
+        context.setVariable("booking", booking);
+        return templateEngine.process("/mail/bookingCancelMail", context);
+    }
 }

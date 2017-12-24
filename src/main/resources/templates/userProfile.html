@@ -74,6 +74,11 @@
                                 Nie dokonałeś jeszcze żadnej rezerwacji, ale możesz to zmienić!
                             </td>
                         </div>
+                        <div th:if="${param.tooLateForBookingManipulationException}">
+                            <td colspan="7" class="alert alert-danger">
+                                Za późno na zmiany wybranej rezerwacji!
+                            </td>
+                        </div>
                         <tr th:each="booking : ${bookings}">
                             <td th:text="${booking.trip.title}"/>
                             <td th:text="${booking.trip.destinationCountry.name + ', ' + booking.trip.destinationCity.name}"/>
@@ -86,7 +91,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a th:href="@{/#}" class="btn btn-theme btn-block">
+                                <a th:href="@{/booking/{id}/cancel(id=${booking.id})}" class="btn btn-theme btn-block">
                                     Anuluj
                                 </a>
                             </td>

@@ -8,4 +8,6 @@ public interface EmailService {
     void sendWelcomeMessage(User user);
 
     void sendBookingMessage(Booking booking);
+
+    void sendCancelBookingMessage(Booking booking);
 }
