@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.logic.service.file;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageException;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageNotFoundException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;

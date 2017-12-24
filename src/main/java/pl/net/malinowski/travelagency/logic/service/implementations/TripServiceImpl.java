@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.logic.service.implementations;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.exceptions.CannotMakeOperationOnTripException;
 import pl.net.malinowski.travelagency.data.entity.Trip;
 import pl.net.malinowski.travelagency.data.repository.TripRepository;
+import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
@@ -23,10 +25,12 @@ public class TripServiceImpl implements TripService {
 
     private TripRepository tripRepository;
     private BookingService bookingService;
+    private final FileService fileService;
 
     @Autowired
-    public TripServiceImpl(TripRepository tripRepository) {
+    public TripServiceImpl(TripRepository tripRepository, FileService fileService) {
         this.tripRepository = tripRepository;
+        this.fileService = fileService;
     }
 
     @Override
@@ -46,6 +50,8 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> searchForTrip(TripSearch search) {
+        if (search.getStartDate() == null) search.setStartDate(DateUtil.getTomorrow());
+        if (search.getEndDate() == null) search.setEndDate(DateUtil.toDate(DateUtil.formatDate(DateUtil.buildDate(1, 1, 2020))));
         return tripRepository.findAvailableTrips(search.getStartDate(), search.getEndDate(),
                 search.getCountry().getId(), search.getPeopleCount())
                 .stream().filter(t -> t.getPeopleLimit() >= search.getPeopleCount())

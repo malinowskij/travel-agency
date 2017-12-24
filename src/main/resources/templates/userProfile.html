@@ -69,6 +69,11 @@
                         <th>Anuluj</th>
                         </thead>
                         <tbody>
+                        <div th:if="${#lists.isEmpty(bookings)}">
+                            <td colspan="7" class="alert alert-info">
+                                Nie dokonałeś jeszcze żadnej rezerwacji, ale możesz to zmienić!
+                            </td>
+                        </div>
                         <tr th:each="booking : ${bookings}">
                             <td th:text="${booking.trip.title}"/>
                             <td th:text="${booking.trip.destinationCountry.name + ', ' + booking.trip.destinationCity.name}"/>

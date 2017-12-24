@@ -16,6 +16,11 @@
     <div class="container">
         <div class="row">
             <h1>Znalezione podróże wg podanych kryteriów: </h1>
+            <div th:if="${#lists.isEmpty(tripList)}">
+                <div class="alert alert-info">
+                    Nie znaleziono podróży o podanych kryteriach
+                </div>
+            </div>
             <div class="col-lg-8">
                 <div th:if="${param.cantBook != null}" class="alert alert-danger">
                     Nie można zarezerwować wybranej podrózy, powodem może być brak wolnych miejsc dla

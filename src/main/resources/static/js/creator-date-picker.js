@@ -16,6 +16,7 @@ $(function () {
             }),
         to = $("#endDate").datepicker({
             changeMonth: true,
+            changeYear: true,
             dateFormat: 'dd-mm-yy',
             minDate: dateToday2
         })

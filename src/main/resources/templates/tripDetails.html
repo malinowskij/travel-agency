@@ -84,6 +84,11 @@
                     </div>
                     <div id="menu2" class="tab-pane fade">
                         <h3>Atrakcje i plany</h3>
+                        <div th:if="${#lists.isEmpty(trip.schedules)}">
+                            <div class="alert alert-info">
+                                Brak planu podróży! Wygląda na to, że sam będziesz decydował o tym co robisz na wycieczce :)
+                            </div>
+                        </div>
                         <table th:if="${!#lists.isEmpty(trip.schedules)}" class="table table-responsive">
                             <thead>
                             <th>Dzień</th>

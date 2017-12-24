@@ -17,10 +17,8 @@ public class TripSearch {
     @NotNull
     private Country country;
 
-    @NotNull
     private Date startDate;
 
-    @NotNull
     private Date endDate;
 
     @Max(4)
