@@ -103,4 +103,9 @@ public class TripServiceImpl implements TripService {
     public void setBookingService(BookingService bookingService) {
         this.bookingService = bookingService;
     }
+
+    @Override
+    public List<Trip> findLastMinuteOffers() {
+        return tripRepository.findLastMinuteTrips(DateUtil.getTodayFormatted());
+    }
 }

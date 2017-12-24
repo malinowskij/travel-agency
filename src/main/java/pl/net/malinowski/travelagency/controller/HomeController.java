@@ -1,19 +1,14 @@
 package pl.net.malinowski.travelagency.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.logic.service.interfaces.CountryService;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 
 @Controller
 @RequestMapping("/")
@@ -21,10 +16,13 @@ import java.util.Date;
 public class HomeController {
 
     private CountryService countryService;
+    private final TripService tripService;
+
 
     @Autowired
-    public HomeController(CountryService countryService) {
+    public HomeController(CountryService countryService, TripService tripService) {
         this.countryService = countryService;
+        this.tripService = tripService;
     }
 
     @GetMapping
@@ -32,6 +30,8 @@ public class HomeController {
         model.addAttribute("availableCountries", countryService.findAvailableCountries());
         if (!model.containsAttribute("search"))
             model.addAttribute("search", new TripSearch());
+
+        model.addAttribute("lastMinute", tripService.findLastMinuteOffers());
         return "index";
     }
 

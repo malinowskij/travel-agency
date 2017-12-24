@@ -5,6 +5,7 @@
 
     <div th:replace="fragments/header :: header-css"/>
     <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <script th:src="@{/js/jquery-ui.js}"/>
     <script th:src="@{/js/creator-date-picker.js}"/>
     <script th:src="@{/js/address-ajax.js}"/>
@@ -66,12 +67,26 @@
     <div class="container">
         <div class="row centered">
             <div class="col-md-4">
-                <i class="fa fa-heart-o"></i>
-                <h4>Handsomely Crafted</h4>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
-                    and scrambled it to make a type specimen book.</p>
-                <p><br/><a href="#" class="btn btn-theme">More Info</a></p>
+                <i class="fa fa-bomb"></i>
+                <h4>Oferty last minute</h4>
+                <table class="table table-responsive" th:if="${!#lists.isEmpty(lastMinute)}">
+                    <tbody>
+                    <tr th:each="trip, iterStat : ${lastMinute}" th:if="${iterStat.index le 4}">
+                        <td>
+                            <a th:href="@{/trip/{id}(id=${trip.id})}">
+                                <span th:text="${trip.title}"></span>
+                            </a>
+                        </td>
+                        <td th:text="${trip.destinationCountry.name + ', ' + trip.destinationCity.name}"></td>
+                        <td style="font-size: 16px; color: red;" th:text="${trip.tripPrice + 'zł/os'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${#lists.size(lastMinute) gt 5}">
+                    <a class="btn btn-theme btn-block" th:href="@{/trip/lastMinute}">
+                        Więcej ofert!
+                    </a>
+                </div>
             </div>
             <div class="col-md-4">
                 <i class="fa fa-flask"></i>

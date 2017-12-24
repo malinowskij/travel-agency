@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.net.malinowski.travelagency.controller.commands.ScheduleForm;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
@@ -18,6 +20,7 @@ import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.*;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -116,7 +119,6 @@ public class TripController {
                                        BindingResult result) {
         if (result.hasErrors())
             return "index";
-
         model.addAttribute("tripList", tripService.searchForTrip(search));
         return "foundedTripList";
     }
@@ -133,5 +135,11 @@ public class TripController {
         tripService.cancelTrip(trip);
 
         return "redirect:/admin/trip";
+    }
+
+    @GetMapping("/trip/lastMinute")
+    public String lastMinuteTripList(Model model) {
+        model.addAttribute("tripList", tripService.findLastMinuteOffers());
+        return "foundedTripList";
     }
 }

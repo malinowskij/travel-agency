@@ -29,4 +29,6 @@ public interface TripService {
     void checkTripBeforeOperation(Trip trip);
 
     void setBookingService(BookingService bookingService);
+
+    List<Trip> findLastMinuteOffers();
 }

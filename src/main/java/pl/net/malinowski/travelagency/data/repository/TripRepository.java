@@ -43,4 +43,10 @@ public interface TripRepository extends PagingAndSortingRepository<Trip, Long> {
             "AND " +
             "(t.tripPrice >= ?4 AND t.tripPrice <= ?5)")
     Page<Trip> findByManyFields(String phrase, String from, String to, BigDecimal priceMin, BigDecimal priceMax, Pageable pageable);
+
+    @Query(value = "SELECT trips.* FROM trips " +
+            "WHERE DATE_PART('day', trips.start_date) - DATE_PART('day', cast(?1 AS date)) < 7 " +
+            "AND DATE_PART('day', trips.start_date) - DATE_PART('day', cast(?1 AS date)) > 0",
+            nativeQuery = true)
+    List<Trip> findLastMinuteTrips(Date today);
 }
