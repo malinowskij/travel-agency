@@ -17,6 +17,12 @@
         <div class="row centered">
             <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <div class="col-lg-12">
+                    <div th:if="${param.tripCreationException}">
+                        <div class="alert alert-danger">
+                            Data rozpoczęcia podróży musi być wczesniej w czasie
+                            niż data zakończenia podróży!
+                        </div>
+                    </div>
                     <h1>Kreator podróży</h1>
                     <form th:action="@{/admin/trip/creator}" method="post" th:object="${tripWithFile}"
                           enctype="multipart/form-data">

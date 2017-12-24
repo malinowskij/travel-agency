@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.net.malinowski.travelagency.controller.exceptions.CannotMakeOperationOnTripException;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageNotFoundException;
+import pl.net.malinowski.travelagency.controller.exceptions.TripCreationException;
 import pl.net.malinowski.travelagency.controller.exceptions.TripHasNotFreePlaces;
 import pl.net.malinowski.travelagency.data.entity.Booking;
 import pl.net.malinowski.travelagency.data.entity.Trip;
@@ -54,6 +55,11 @@ public class GlobalAdviceController {
         model.addFlashAttribute("message",
                 "Nie można modyfikować wybranej podróży o ID: " + t.getId() + " Nazwa: " + t.getTitle());
         return "redirect:/admin/trip?operationException";
+    }
+
+    @ExceptionHandler({TripCreationException.class})
+    public String tripCreationExceptionHandle() {
+        return "redirect:/admin/trip/creator?tripCreationException";
     }
 
     @InitBinder

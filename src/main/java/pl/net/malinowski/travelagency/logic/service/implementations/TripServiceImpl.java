@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.commands.TripAdvancedSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.exceptions.CannotMakeOperationOnTripException;
+import pl.net.malinowski.travelagency.controller.exceptions.TripCreationException;
 import pl.net.malinowski.travelagency.data.entity.Trip;
 import pl.net.malinowski.travelagency.data.repository.TripRepository;
 import pl.net.malinowski.travelagency.logic.service.file.FileService;
@@ -35,6 +36,8 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip save(Trip trip) {
+        if (!trip.getStartDate().before(trip.getEndDate()))
+            throw new TripCreationException();
         return tripRepository.save(trip);
     }
 
