@@ -23,4 +23,10 @@ public interface TripService {
 
 
     Page<Trip> findByManyFields(TripAdvancedSearch search, Pageable pageable);
+
+    void cancelTrip(Trip trip);
+
+    void checkTripBeforeOperation(Trip trip);
+
+    void setBookingService(BookingService bookingService);
 }

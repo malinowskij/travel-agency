@@ -17,6 +17,11 @@
         <div class="row">
             <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <div class="col-lg-12">
+                    <div th:if="${param.operationException}">
+                        <div class="alert alert-danger">
+                            <span th:text="${message}"/>
+                        </div>
+                    </div>
                     <h1>Szukaj</h1>
                     <form th:action="@{/admin/trip}" method="POST" th:object="${tripSearch}">
                         <div th:if="${#fields.hasErrors('*')}"
@@ -52,6 +57,9 @@
                         <th>Data</th>
                         <th>Cechy</th>
                         <th>Cena</th>
+                        <th>
+                            Zarządzaj
+                        </th>
                         </thead>
                         <tbody>
                         <tr th:each="trip : ${tripList.content}">
@@ -85,6 +93,25 @@
                             <span style="font-size: 17px; color: red;"
                                   th:text="${trip.tripPrice} + 'zł/os'"/>
                             </td>
+                            <td>
+                                <a th:href="@{/admin/trip/edit/{tripId}(tripId=${trip.id})}" class="btn btn-theme btn-block"
+                                   data-toggle="popover" title="Zmiana" data-trigger="hover" data-placement="left"
+                                   data-content="Możliwe przed rozpoczęciem oraz przy braku rezerwacji">
+                                    Zmień
+                                </a>
+                                <a th:href="@{/admin/trip/creator/schedule/{tripId}(tripId=${trip.id})}" class="btn btn-theme btn-block"
+                                   data-toggle="popover" title="Zamiana planu" data-trigger="hover"
+                                   data-placement="left"
+                                   data-content="Zmiana możliwa jedynie przed rozpoczęciem podróży">
+                                    Zarządzaj planem
+                                </a>
+                                <a th:href="@{/admin/trip/cancel/{tripId}(tripId=${trip.id})}" class="btn btn-theme btn-block"
+                                   data-toggle="popover" title="Anulowanie podróży" data-trigger="hover"
+                                   data-placement="left"
+                                   data-content="Możliwe przed rozpoczęciem oraz przy braku rezerwacji">
+                                    Anuluj
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -94,6 +121,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    })
+</script>
 
 <div th:replace="fragments/footer :: footer"/>
 

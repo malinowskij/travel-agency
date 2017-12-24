@@ -59,7 +59,7 @@ public class Trip {
     @Column(nullable = false, name = "trip_price")
     private BigDecimal tripPrice;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "trips_schedules", joinColumns = @JoinColumn(name = "trip_id"),
             inverseJoinColumns = @JoinColumn(name = "schedule_id"))
     private Set<Schedule> schedules;
@@ -78,7 +78,7 @@ public class Trip {
 
     @NotNull
     @Valid
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "drive_id")
     private Drive drive;
 

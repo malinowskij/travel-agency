@@ -31,6 +31,19 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    public static Date getTomorrow() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, 1);
+        return DateUtil.toDate(DateUtil.formatDate(calendar.getTime()));
+    }
+
+    public static Date getTodayFormatted() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        return DateUtil.toDate(DateUtil.formatDate(calendar.getTime()));
+    }
+
     public static Date buildDate(int d, int m, int y) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(y, m, d);

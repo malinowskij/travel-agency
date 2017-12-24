@@ -12,6 +12,7 @@ import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,11 @@ public class BookingServiceImpl implements BookingService {
     public BookingServiceImpl(BookingRepository bookingRepository, TripService tripService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
+    }
+
+    @PostConstruct
+    public void init() {
+        tripService.setBookingService(this);
     }
 
     @Override
@@ -56,5 +62,10 @@ public class BookingServiceImpl implements BookingService {
         if (loggedInUser.getRoles().stream().anyMatch(r -> r.getName().equals(Role.Type.ROLE_ADMIN)))
             return true;
         return booking.getCustomer().getId().equals(loggedInUser.getId());
+    }
+
+    @Override
+    public Long countBookingsByTripId(Long tripId) {
+        return bookingRepository.countByTripId(tripId);
     }
 }

@@ -104,6 +104,7 @@ public class TripController {
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/admin/trip/creator/schedule/{tripId}")
     public String tripScheduleCreator(@PathVariable("tripId") Trip trip, Model model) {
+        tripService.checkTripBeforeOperation(trip);
         model.addAttribute("trip", trip);
         model.addAttribute("daysCount", DateUtil.daysBetween(trip.getStartDate(), trip.getEndDate()));
         model.addAttribute("scheduleForm", new ScheduleForm());
@@ -124,5 +125,13 @@ public class TripController {
     public String findOneTrip(@PathVariable("id") Trip trip, Model model) {
         model.addAttribute("trip", trip);
         return "tripDetails";
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/admin/trip/cancel/{tripId}")
+    public String cancelTrip(@PathVariable("tripId") Trip trip) {
+        tripService.cancelTrip(trip);
+
+        return "redirect:/admin/trip";
     }
 }

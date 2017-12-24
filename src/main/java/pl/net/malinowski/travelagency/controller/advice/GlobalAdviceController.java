@@ -8,9 +8,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pl.net.malinowski.travelagency.controller.exceptions.CannotMakeOperationOnTripException;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageNotFoundException;
 import pl.net.malinowski.travelagency.controller.exceptions.TripHasNotFreePlaces;
 import pl.net.malinowski.travelagency.data.entity.Booking;
+import pl.net.malinowski.travelagency.data.entity.Trip;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
 
 import java.text.SimpleDateFormat;
@@ -43,6 +46,14 @@ public class GlobalAdviceController {
     public String handleAccessDeniedException(Model model) {
         model.addAttribute("message", "Przykro nam ale nie masz dostępu do zasobu, którego żądasz!");
         return "/errors/alertError";
+    }
+
+    @ExceptionHandler({CannotMakeOperationOnTripException.class})
+    public String tripOperationExceptionHandle(CannotMakeOperationOnTripException ex, RedirectAttributes model) {
+        Trip t = ex.getTrip();
+        model.addFlashAttribute("message",
+                "Nie można modyfikować wybranej podróży o ID: " + t.getId() + " Nazwa: " + t.getTitle());
+        return "redirect:/admin/trip?operationException";
     }
 
     @InitBinder
