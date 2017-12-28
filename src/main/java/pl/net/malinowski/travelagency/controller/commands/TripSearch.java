@@ -14,7 +14,6 @@ import java.util.Date;
 @Getter @Setter @NoArgsConstructor
 public class TripSearch {
 
-    @NotNull
     private Country country;
 
     private Date startDate;

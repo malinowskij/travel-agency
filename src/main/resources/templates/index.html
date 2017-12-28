@@ -69,7 +69,10 @@
             <div class="col-md-4">
                 <i class="fa fa-bomb"></i>
                 <h4>Oferty last minute</h4>
-                <table class="table table-responsive" th:if="${!#lists.isEmpty(lastMinute)}">
+                <span th:if="${#lists.isEmpty(lastMinute)}">
+                    Brak ofert last minute!
+                </span>
+                <table class="table table-responsive table-hover" th:if="${!#lists.isEmpty(lastMinute)}">
                     <tbody>
                     <tr th:each="trip, iterStat : ${lastMinute}" th:if="${iterStat.index le 4}">
                         <td>
