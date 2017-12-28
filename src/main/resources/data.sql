@@ -52728,3 +52728,67 @@ INSERT INTO features (id, name) VALUES
   (8, 'świetne baseny, miniaquapark'),
   (9, 'polecany dla par'),
   (10, 'aktywny wypoczynek');
+
+create table IF NOT EXISTS system_message (id integer not null, content varchar(255), primary key (id));
+
+CREATE SEQUENCE acl_sid_seq;
+
+CREATE TABLE IF NOT EXISTS acl_sid (
+  id BIGINT  NOT NULL DEFAULT NEXTVAL ('acl_sid_seq'),
+  principal smallint NOT NULL,
+  sid varchar(100) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT unique_uk_1 UNIQUE (sid,principal)
+);
+
+CREATE SEQUENCE acl_class_seq;
+
+CREATE TABLE IF NOT EXISTS acl_class (
+  id bigint NOT NULL DEFAULT NEXTVAL ('acl_class_seq'),
+  class varchar(255) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT unique_uk_2 UNIQUE (class)
+);
+
+CREATE SEQUENCE acl_entry_seq;
+
+CREATE TABLE IF NOT EXISTS acl_entry (
+  id bigint NOT NULL DEFAULT NEXTVAL ('acl_entry_seq'),
+  acl_object_identity bigint NOT NULL,
+  ace_order int NOT NULL,
+  sid bigint NOT NULL,
+  mask int NOT NULL,
+  granting smallint NOT NULL,
+  audit_success smallint NOT NULL,
+  audit_failure smallint NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT unique_uk_4 UNIQUE (acl_object_identity,ace_order)
+);
+
+CREATE SEQUENCE acl_object_identity_seq;
+
+CREATE TABLE IF NOT EXISTS acl_object_identity (
+  id bigint NOT NULL DEFAULT NEXTVAL ('acl_object_identity_seq'),
+  object_id_class bigint NOT NULL,
+  object_id_identity bigint NOT NULL,
+  parent_object bigint DEFAULT NULL,
+  owner_sid bigint DEFAULT NULL,
+  entries_inheriting smallint NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT unique_uk_3 UNIQUE (object_id_class,object_id_identity)
+);
+
+ALTER TABLE acl_entry
+  ADD FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id);
+
+ALTER TABLE acl_entry
+  ADD FOREIGN KEY (sid) REFERENCES acl_sid(id);
+
+ALTER TABLE acl_object_identity
+  ADD FOREIGN KEY (parent_object) REFERENCES acl_object_identity (id);
+
+ALTER TABLE acl_object_identity
+  ADD FOREIGN KEY (object_id_class) REFERENCES acl_class (id);
+
+ALTER TABLE acl_object_identity
+  ADD FOREIGN KEY (owner_sid) REFERENCES acl_sid (id);
