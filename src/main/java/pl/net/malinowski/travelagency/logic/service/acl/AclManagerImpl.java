@@ -61,22 +61,14 @@ public class AclManagerImpl implements AclManager {
             aclService.updateAcl(acl);
         } catch (RuntimeException ex) {
             //PSQLException
+            log.debug(ex.getMessage());
         }
 
     }
 
-   /* @Override
-    public <T> void removePermission(Class<T> clazz, Serializable identifier, Sid sid, Permission permission) {
-        ObjectIdentity identity = new ObjectIdentityImpl(clazz.getCanonicalName(), identifier);
-        MutableAcl acl = (MutableAcl) aclService.readAclById(identity);
-
-        AccessControlEntry[] entries = acl.getEntries().toArray(new AccessControlEntry[acl.getEntries().size()]);
-
-        for (int i = 0; i < acl.getEntries().size(); i++) {
-            if (entries[i].getSid().equals(sid) && entries[i].getPermission().equals(permission))
-                acl.deleteAce(i);
-        }
-
-        aclService.updateAcl(acl);
-    }*/
+    @Override
+    public <T> void removeFullPermissions(Class<T> clazz, Long identifier, Sid sid) {
+        ObjectIdentity identity = new ObjectIdentityImpl(clazz.getCanonicalName(), identifier.toString());
+        aclService.deleteAcl(identity, true);
+    }
 }

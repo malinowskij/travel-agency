@@ -90,5 +90,7 @@ public class BookingServiceImpl implements BookingService {
     public void cancelBooking(Booking booking) {
         checkIfOperationIsAvailable(booking);
         bookingRepository.delete(booking);
+        aclManager.removeFullPermissions(Booking.class, booking.getId(),
+                new PrincipalSid(userService.getLoggedInUser().getEmail()));
     }
 }
