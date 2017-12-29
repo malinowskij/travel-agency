@@ -1,17 +1,12 @@
 package pl.net.malinowski.travelagency.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.net.malinowski.travelagency.controller.commands.ScheduleForm;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
@@ -20,11 +15,8 @@ import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.*;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -37,17 +29,21 @@ public class TripController {
     private FeatureService featureService;
     private FileService fileService;
     private DriveService driveService;
+    private final StateService stateService;
+    private final CityService cityService;
 
     @Autowired
     public TripController(CountryService countryService, TripService tripService,
                           AttractionService attractionService, FeatureService featureService,
-                          FileService fileService, DriveService driveService) {
+                          FileService fileService, DriveService driveService, StateService stateService, CityService cityService) {
         this.countryService = countryService;
         this.tripService = tripService;
         this.attractionService = attractionService;
         this.featureService = featureService;
         this.fileService = fileService;
         this.driveService = driveService;
+        this.stateService = stateService;
+        this.cityService = cityService;
     }
 
     @ModelAttribute("countries")
@@ -141,5 +137,17 @@ public class TripController {
     public String lastMinuteTripList(Model model) {
         model.addAttribute("tripList", tripService.findLastMinuteOffers());
         return "foundedTripList";
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/admin/trip/edit/{id}")
+    public String editTripForm(@PathVariable("id") Trip trip, Model model) {
+        tripService.checkTripBeforeOperation(trip);
+        TripWithFile twf = new TripWithFile();
+        twf.setTrip(trip);
+        model.addAttribute("states", stateService.findById(trip.getDestinationCity().getState().getId()));
+        model.addAttribute("cities", cityService.findById(trip.getDestinationCity().getId()));
+        model.addAttribute("tripWithFile", twf);
+        return "tripCreatorForm";
     }
 }
