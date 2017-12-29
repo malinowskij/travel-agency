@@ -30,9 +30,9 @@ public interface TripRepository extends PagingAndSortingRepository<Trip, Long> {
             "  LEFT JOIN bookings " +
             "  ON bookings.trip_id = trips.id " +
             "WHERE trips.id = ?1 " +
-            "GROUP BY trips.id, bookings.id " +
-            "HAVING SUM(bookings.people_quantity) < (trips.people_limit - ?2) " +
-            "OR bookings.id IS NULL", nativeQuery = true)
+            "GROUP BY trips.id " +
+            "HAVING SUM(bookings.people_quantity) <= (trips.people_limit - ?2) " +
+            "OR SUM(bookings.people_quantity) IS NULL", nativeQuery = true)
     List<Trip> hasFreePlaces(Long tripId, int peopleQuantity);
 
     @Query("SELECT t FROM Trip t WHERE (lower(t.title) LIKE lower(?1) " +
