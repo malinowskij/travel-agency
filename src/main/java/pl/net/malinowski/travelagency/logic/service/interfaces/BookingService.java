@@ -7,6 +7,8 @@ import pl.net.malinowski.travelagency.data.entity.User;
 import java.util.List;
 
 public interface BookingService {
+    List<Booking> findAll();
+
     Booking save(Booking booking);
 
     Booking findById(Long id);

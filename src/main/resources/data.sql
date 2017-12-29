@@ -52729,66 +52729,43 @@ INSERT INTO features (id, name) VALUES
   (9, 'polecany dla par'),
   (10, 'aktywny wypoczynek');
 
-create table IF NOT EXISTS system_message (id integer not null, content varchar(255), primary key (id));
-
-CREATE SEQUENCE acl_sid_seq;
-
-CREATE TABLE IF NOT EXISTS acl_sid (
-  id BIGINT  NOT NULL DEFAULT NEXTVAL ('acl_sid_seq'),
-  principal smallint NOT NULL,
-  sid varchar(100) NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT unique_uk_1 UNIQUE (sid,principal)
+create table acl_sid(
+  id bigserial not null primary key,
+  principal boolean not null,
+  sid varchar(100) not null,
+  constraint unique_uk_1 unique(sid,principal)
 );
 
-CREATE SEQUENCE acl_class_seq;
-
-CREATE TABLE IF NOT EXISTS acl_class (
-  id bigint NOT NULL DEFAULT NEXTVAL ('acl_class_seq'),
-  class varchar(255) NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT unique_uk_2 UNIQUE (class)
+create table acl_class(
+  id bigserial not null primary key,
+  class varchar(100) not null,
+  class_id_type varchar(100),
+  constraint unique_uk_2 unique(class)
 );
 
-CREATE SEQUENCE acl_entry_seq;
-
-CREATE TABLE IF NOT EXISTS acl_entry (
-  id bigint NOT NULL DEFAULT NEXTVAL ('acl_entry_seq'),
-  acl_object_identity bigint NOT NULL,
-  ace_order int NOT NULL,
-  sid bigint NOT NULL,
-  mask int NOT NULL,
-  granting smallint NOT NULL,
-  audit_success smallint NOT NULL,
-  audit_failure smallint NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT unique_uk_4 UNIQUE (acl_object_identity,ace_order)
+create table acl_object_identity(
+  id bigserial primary key,
+  object_id_class bigint not null,
+  object_id_identity varchar(36) not null,
+  parent_object bigint,
+  owner_sid bigint,
+  entries_inheriting boolean not null,
+  constraint unique_uk_3 unique(object_id_class,object_id_identity),
+  constraint foreign_fk_1 foreign key(parent_object)references acl_object_identity(id),
+  constraint foreign_fk_2 foreign key(object_id_class)references acl_class(id),
+  constraint foreign_fk_3 foreign key(owner_sid)references acl_sid(id)
 );
 
-CREATE SEQUENCE acl_object_identity_seq;
-
-CREATE TABLE IF NOT EXISTS acl_object_identity (
-  id bigint NOT NULL DEFAULT NEXTVAL ('acl_object_identity_seq'),
-  object_id_class bigint NOT NULL,
-  object_id_identity bigint NOT NULL,
-  parent_object bigint DEFAULT NULL,
-  owner_sid bigint DEFAULT NULL,
-  entries_inheriting smallint NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT unique_uk_3 UNIQUE (object_id_class,object_id_identity)
+create table acl_entry(
+  id bigserial primary key,
+  acl_object_identity bigint not null,
+  ace_order int not null,
+  sid bigint not null,
+  mask integer not null,
+  granting boolean not null,
+  audit_success boolean not null,
+  audit_failure boolean not null,
+  constraint unique_uk_4 unique(acl_object_identity,ace_order),
+  constraint foreign_fk_4 foreign key(acl_object_identity) references acl_object_identity(id),
+  constraint foreign_fk_5 foreign key(sid) references acl_sid(id)
 );
-
-ALTER TABLE acl_entry
-  ADD FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id);
-
-ALTER TABLE acl_entry
-  ADD FOREIGN KEY (sid) REFERENCES acl_sid(id);
-
-ALTER TABLE acl_object_identity
-  ADD FOREIGN KEY (parent_object) REFERENCES acl_object_identity (id);
-
-ALTER TABLE acl_object_identity
-  ADD FOREIGN KEY (object_id_class) REFERENCES acl_class (id);
-
-ALTER TABLE acl_object_identity
-  ADD FOREIGN KEY (owner_sid) REFERENCES acl_sid (id);

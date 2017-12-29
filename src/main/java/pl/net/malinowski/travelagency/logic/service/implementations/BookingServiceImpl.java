@@ -39,6 +39,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<Booking> findAll() {
+        return bookingRepository.findAll();
+    }
+
+    @Override
     public Booking save(Booking booking) {
         if (!tripService.hasTripFreePlaces(booking.getTrip().getId(), booking.getPeopleQuantity())
                 || booking.getTrip().getPeopleLimit() < booking.getPeopleQuantity())

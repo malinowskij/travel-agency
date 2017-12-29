@@ -1,6 +1,7 @@
 package pl.net.malinowski.travelagency.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import javax.sql.DataSource;
 @Configuration
 public class AclContext {
 
+    @Qualifier("dataSource")
     @Autowired
     DataSource dataSource;
 

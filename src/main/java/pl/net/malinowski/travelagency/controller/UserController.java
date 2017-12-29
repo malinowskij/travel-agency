@@ -67,7 +67,7 @@ public class UserController {
     public String userProfile(Model model) {
         User usr = userService.getLoggedInUser();
         model.addAttribute("user", usr);
-        model.addAttribute("bookings", bookingService.findByUser(usr));
+        model.addAttribute("bookings", bookingService.findAll());
         return "userProfile";
     }
 
