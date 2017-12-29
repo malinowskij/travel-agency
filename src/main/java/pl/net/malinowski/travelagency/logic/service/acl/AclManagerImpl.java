@@ -3,9 +3,13 @@ package pl.net.malinowski.travelagency.logic.service.acl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
+import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.net.malinowski.travelagency.data.entity.Booking;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -23,14 +27,45 @@ public class AclManagerImpl implements AclManager {
     }
 
     @Override
-    public <T> void addPermission(Class<T> clazz, Serializable identifier, Sid sid, Permission permission) {
-        ObjectIdentity identity = new ObjectIdentityImpl(clazz, identifier);
-        MutableAcl acl = isNewAcl(identity);
-        isPermissionGranted(permission, sid, acl);
-        aclService.updateAcl(acl);
+    public <T> void addPermission(Class<T> clazz, Long identifier, Sid sid, Permission permission) {
+        ObjectIdentity oi = new ObjectIdentityImpl(clazz, identifier);
+        MutableAcl acl = findAcl(oi);
+
+        try {
+            acl.insertAce(acl.getEntries().size(), permission, sid, true);
+            aclService.updateAcl(acl);
+        } catch (RuntimeException ignored) {
+            //PSQLException
+        }
+    }
+
+    private MutableAcl findAcl(ObjectIdentity oi) {
+        try {
+            return (MutableAcl) aclService.readAclById(oi);
+        } catch (NotFoundException ex) {
+            return aclService.createAcl(oi);
+        }
     }
 
     @Override
+    public <T> void buildFullPermission(Class<T> clazz, Long identifier, Sid sid) {
+        ObjectIdentity oi = new ObjectIdentityImpl(clazz, identifier);
+        MutableAcl acl = findAcl(oi);
+
+        try {
+            acl.insertAce(0, BasePermission.ADMINISTRATION, sid, true);
+            acl.insertAce(1, BasePermission.DELETE, sid, true);
+            acl.insertAce(2, BasePermission.WRITE, sid, true);
+            acl.insertAce(3, BasePermission.READ, sid, true);
+            acl.insertAce(4, BasePermission.CREATE, sid, true);
+            aclService.updateAcl(acl);
+        } catch (RuntimeException ex) {
+            //PSQLException
+        }
+
+    }
+
+   /* @Override
     public <T> void removePermission(Class<T> clazz, Serializable identifier, Sid sid, Permission permission) {
         ObjectIdentity identity = new ObjectIdentityImpl(clazz.getCanonicalName(), identifier);
         MutableAcl acl = (MutableAcl) aclService.readAclById(identity);
@@ -43,40 +78,5 @@ public class AclManagerImpl implements AclManager {
         }
 
         aclService.updateAcl(acl);
-    }
-
-    @Override
-    public <T> boolean isPermissionGranted(Class<T> clazz, Serializable identifier, Sid sid, Permission permission) {
-        ObjectIdentity identity = new ObjectIdentityImpl(clazz.getCanonicalName(), identifier);
-        MutableAcl acl = (MutableAcl) aclService.readAclById(identity);
-        boolean isGranted = false;
-
-        try {
-            isGranted = acl.isGranted(Arrays.asList(permission), Arrays.asList(sid), false);
-        } catch (NotFoundException e) {
-            log.info("Unable to find an ACE for the given object", e);
-        } catch (UnloadedSidException e) {
-            log.error("Unloaded Sid", e);
-        }
-
-        return isGranted;
-    }
-
-    private MutableAcl isNewAcl(ObjectIdentity identity) {
-        MutableAcl acl;
-        try {
-            acl = (MutableAcl) aclService.readAclById(identity);
-        } catch (NotFoundException e) {
-            acl = aclService.createAcl(identity);
-        }
-        return acl;
-    }
-
-    private void isPermissionGranted(Permission permission, Sid sid, MutableAcl acl) {
-        try {
-            acl.isGranted(Arrays.asList(permission), Arrays.asList(sid), false);
-        } catch (NotFoundException e) {
-            acl.insertAce(acl.getEntries().size(), permission, sid, true);
-        }
-    }
+    }*/
 }

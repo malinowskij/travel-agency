@@ -74,7 +74,6 @@ public class BookingController {
     @GetMapping("/{id}/edit")
     public String showEditBookingForm(@PathVariable("id") Booking booking, Model model) {
         bookingService.checkIfOperationIsAvailable(booking);
-        bookingService.checkPrivilegesForBooking(booking, userService.getLoggedInUser());
         model.addAttribute(booking);
 
         return "redirect:/";

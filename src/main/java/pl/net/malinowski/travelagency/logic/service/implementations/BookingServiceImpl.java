@@ -1,15 +1,15 @@
 package pl.net.malinowski.travelagency.logic.service.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.exceptions.TooLateForBookingManipulateException;
 import pl.net.malinowski.travelagency.controller.exceptions.TripHasNotFreePlaces;
 import pl.net.malinowski.travelagency.data.entity.Booking;
-import pl.net.malinowski.travelagency.data.entity.Role;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.data.repository.BookingRepository;
+import pl.net.malinowski.travelagency.logic.service.acl.AclManager;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
@@ -25,12 +25,15 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final TripService tripService;
+    private final AclManager aclManager;
 
     @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository, UserService userService, TripService tripService) {
+    public BookingServiceImpl(BookingRepository bookingRepository, UserService userService,
+                              TripService tripService, AclManager aclManager) {
         this.bookingRepository = bookingRepository;
         this.userService = userService;
         this.tripService = tripService;
+        this.aclManager = aclManager;
     }
 
     @PostConstruct
@@ -49,7 +52,12 @@ public class BookingServiceImpl implements BookingService {
                 || booking.getTrip().getPeopleLimit() < booking.getPeopleQuantity())
             throw new TripHasNotFreePlaces(booking);
         booking.setBookingDate(new Date());
-        return bookingRepository.save(booking);
+        booking = bookingRepository.save(booking);
+
+        aclManager.buildFullPermission(Booking.class, booking.getId(),
+                new PrincipalSid(userService.getLoggedInUser().getEmail()));
+
+        return booking;
     }
 
     @Override
@@ -68,13 +76,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void checkPrivilegesForBooking(Booking booking, User user) {
-        if (user.getRoles().stream().noneMatch(r -> r.getName().equals(Role.Type.ROLE_ADMIN)) ||
-                !booking.getCustomer().getId().equals(user.getId()))
-            throw new AccessDeniedException(user.getFirstName() + " nie posiadasz uprawnień do oglądania tego zasobu!");
-    }
-
-    @Override
     public void checkIfOperationIsAvailable(Booking booking) {
         if (!DateUtil.getTodayFormatted().before(booking.getTrip().getStartDate()))
             throw new TooLateForBookingManipulateException();
@@ -88,7 +89,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void cancelBooking(Booking booking) {
         checkIfOperationIsAvailable(booking);
-        checkPrivilegesForBooking(booking, userService.getLoggedInUser());
         bookingRepository.delete(booking);
     }
 }

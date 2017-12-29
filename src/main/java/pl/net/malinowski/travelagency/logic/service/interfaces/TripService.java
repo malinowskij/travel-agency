@@ -21,7 +21,6 @@ public interface TripService {
 
     boolean hasTripFreePlaces(Long tripId, int peopleQuantity);
 
-
     Page<Trip> findByManyFields(TripAdvancedSearch search, Pageable pageable);
 
     void cancelTrip(Trip trip);

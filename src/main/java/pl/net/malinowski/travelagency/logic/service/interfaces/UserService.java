@@ -22,4 +22,6 @@ public interface UserService {
     Page<User> findAllPaginated(Pageable pageable);
 
     Page<User> findByPhrasePaginated(PhraseSearch phraseSearch, Pageable pageable);
+
+    boolean isAdminLogged();
 }

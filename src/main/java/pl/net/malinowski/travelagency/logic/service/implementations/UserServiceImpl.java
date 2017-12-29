@@ -9,8 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.commands.EditUserForm;
 import pl.net.malinowski.travelagency.controller.commands.PhraseSearch;
+import pl.net.malinowski.travelagency.data.entity.AclSid;
 import pl.net.malinowski.travelagency.data.entity.Role;
 import pl.net.malinowski.travelagency.data.entity.User;
+import pl.net.malinowski.travelagency.data.repository.SidRepository;
 import pl.net.malinowski.travelagency.data.repository.UserRepository;
 import pl.net.malinowski.travelagency.logic.service.interfaces.RoleService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
@@ -25,13 +27,15 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private RoleService roleService;
+    private final SidRepository sidRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                           RoleService roleService) {
+                           RoleService roleService, SidRepository sidRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.sidRepository = sidRepository;
     }
 
     @Override
@@ -43,6 +47,8 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         user.setRoles(new HashSet<>(Arrays.asList(roleService.findByName(Role.Type.ROLE_USER))));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getId() == null)
+            sidRepository.save(new AclSid(true, user.getEmail()));
         return userRepository.save(user);
     }
 
@@ -93,5 +99,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findByPhrasePaginated(PhraseSearch phraseSearch, Pageable pageable) {
         return userRepository.findByPhraseSearch("%" + phraseSearch.getPhrase() + "%", pageable);
+    }
+
+    @Override
+    public boolean isAdminLogged() {
+        return this.getLoggedInUser().getRoles()
+                .stream().anyMatch(r -> r.getName() == (Role.Type.ROLE_ADMIN));
     }
 }

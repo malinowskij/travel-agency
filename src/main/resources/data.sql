@@ -52729,7 +52729,7 @@ INSERT INTO features (id, name) VALUES
   (9, 'polecany dla par'),
   (10, 'aktywny wypoczynek');
 
-create table acl_sid(
+create table if not exists acl_sid(
   id bigserial not null primary key,
   principal boolean not null,
   sid varchar(100) not null,
