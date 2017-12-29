@@ -80,7 +80,11 @@
                             </td>
                         </div>
                         <tr th:each="booking : ${bookings}">
-                            <td th:text="${booking.trip.title}"/>
+                            <td>
+                                <a th:href="@{/booking/{id}(id=${booking.id})}">
+                                    <span th:text="${booking.trip.title}"/>
+                                </a>
+                            </td>
                             <td th:text="${booking.trip.destinationCountry.name + ', ' + booking.trip.destinationCity.name}"/>
                             <td th:text="${#dates.format(booking.trip.startDate, 'dd-MM-yyyy') + ' - ' + #dates.format(booking.trip.endDate, 'dd-MM-yyyy')}"/>
                             <td th:text="${booking.peopleQuantity}"/>

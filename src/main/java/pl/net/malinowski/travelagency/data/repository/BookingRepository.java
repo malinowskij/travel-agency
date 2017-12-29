@@ -21,5 +21,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @PreAuthorize("hasPermission(#booking, 'DELETE') or hasRole('ROLE_ADMIN')")
     void delete(@Param("booking") Booking booking);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ') or hasRole('ROLE_ADMIN')")
+    Booking findOne(Long id);
+
     Long countByTripId(Long tripId);
 }

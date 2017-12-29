@@ -71,6 +71,13 @@ public class BookingController {
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @GetMapping("/{id}")
+    public String showBooking(@PathVariable("id") Booking booking, Model model) {
+        model.addAttribute("booking", booking);
+        return "bookingDetails";
+    }
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}/edit")
     public String showEditBookingForm(@PathVariable("id") Booking booking, Model model) {
         bookingService.checkIfOperationIsAvailable(booking);
