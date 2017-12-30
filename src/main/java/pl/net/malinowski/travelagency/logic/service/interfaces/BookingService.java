@@ -24,4 +24,6 @@ public interface BookingService {
     void cancelBooking(Booking booking);
 
     Booking update(Booking booking, int prevPeopleQuantity);
+
+    Integer countReservationsByTripId(Long tripId);
 }

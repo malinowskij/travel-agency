@@ -63,8 +63,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking update(Booking booking, int prevPeopleQuantity) {
         if (prevPeopleQuantity < booking.getPeopleQuantity())
-            if (!tripService.hasTripFreePlaces(booking.getTrip().getId(), (prevPeopleQuantity - booking.getPeopleQuantity())))
+            if (this.countReservationsByTripId(booking.getTrip().getId()) + (booking.getPeopleQuantity() - prevPeopleQuantity) >
+                    booking.getTrip().getPeopleLimit())
                 throw new TripHasNotFreePlaces(booking);
+
         return bookingRepository.save(booking);
     }
 
@@ -100,5 +102,10 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.delete(booking);
         aclManager.removeFullPermissions(Booking.class, booking.getId(),
                 new PrincipalSid(userService.getLoggedInUser().getEmail()));
+    }
+
+    @Override
+    public Integer countReservationsByTripId(Long tripId) {
+        return bookingRepository.sumPeopleQuantityByTripId(tripId);
     }
 }

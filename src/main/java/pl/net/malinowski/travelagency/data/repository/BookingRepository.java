@@ -1,6 +1,7 @@
 package pl.net.malinowski.travelagency.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -23,6 +24,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @PostAuthorize("hasPermission(returnObject, 'READ') or hasRole('ROLE_ADMIN')")
     Booking findOne(Long id);
+
+    @Query(value = "SELECT SUM(bookings.people_quantity) FROM bookings " +
+            "WHERE bookings.trip_id = ?1", nativeQuery = true)
+    Integer sumPeopleQuantityByTripId(Long tripId);
 
     Long countByTripId(Long tripId);
 }
