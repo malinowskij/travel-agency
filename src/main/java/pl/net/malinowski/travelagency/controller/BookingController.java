@@ -84,6 +84,7 @@ public class BookingController {
     @GetMapping("/{id}/edit")
     public String showEditBookingForm(@PathVariable("id") Booking booking, Model model,
                                       HttpSession session) {
+        bookingService.checkIfOperationIsAvailable(booking);
         model.addAttribute(booking);
         session.setAttribute("orgBooking", booking);
 
