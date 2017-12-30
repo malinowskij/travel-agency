@@ -61,6 +61,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public Booking update(Booking booking, int prevPeopleQuantity) {
+        if (prevPeopleQuantity < booking.getPeopleQuantity())
+            if (!tripService.hasTripFreePlaces(booking.getTrip().getId(), (prevPeopleQuantity - booking.getPeopleQuantity())))
+                throw new TripHasNotFreePlaces(booking);
+        return bookingRepository.save(booking);
+    }
+
+    @Override
     public Booking findById(Long id) {
         return bookingRepository.findOne(id);
     }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Attr;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.data.entity.Attraction;
@@ -17,8 +18,10 @@ import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
 import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/booking")
@@ -79,11 +82,32 @@ public class BookingController {
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}/edit")
-    public String showEditBookingForm(@PathVariable("id") Booking booking, Model model) {
-        bookingService.checkIfOperationIsAvailable(booking);
+    public String showEditBookingForm(@PathVariable("id") Booking booking, Model model,
+                                      HttpSession session) {
         model.addAttribute(booking);
+        session.setAttribute("orgBooking", booking);
 
-        return "redirect:/";
+        return "editBooking";
+    }
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @PostMapping("/{id}/edit")
+    public String processEditBooking(@Valid @ModelAttribute Booking booking, BindingResult error,
+                                     HttpSession session) {
+        if (error.hasErrors()) {
+            return "editBooking";
+        }
+
+        Booking b = (Booking) session.getAttribute("orgBooking");
+        int prevQuantity = b.getPeopleQuantity();
+
+        b.setPeopleQuantity(booking.getPeopleQuantity());
+        b.setAllInclusive(booking.isAllInclusive());
+
+        b = bookingService.update(b, prevQuantity);
+
+        session.removeAttribute("orgBooking");
+        return "redirect:/user/profile";
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
