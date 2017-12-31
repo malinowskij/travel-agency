@@ -68,7 +68,7 @@ public class BookingController {
 
         booking = bookingService.save(booking);
         String pdfPath = pdfService.generatePdfForBooking(booking);
-        emailService.sendBookingMessage(booking);
+        emailService.sendBookingMessage(booking, pdfPath);
 
         return "redirect:/user/profile";
     }
