@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import pl.net.malinowski.travelagency.logic.service.file.FileService;
+import pl.net.malinowski.travelagency.logic.service.pdf.PdfService;
 
 import java.util.concurrent.Executor;
 
@@ -34,9 +35,10 @@ public class TravelAgencyApplication {
     }
 
     @Bean
-    CommandLineRunner init(FileService fileService) {
+    CommandLineRunner init(FileService fileService, PdfService pdfService) {
         return (args) -> {
             fileService.init();
+            pdfService.init();
         };
     }
 }

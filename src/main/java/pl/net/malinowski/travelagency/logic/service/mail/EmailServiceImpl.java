@@ -1,7 +1,7 @@
 package pl.net.malinowski.travelagency.logic.service.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -9,7 +9,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.data.entity.Booking;
 import pl.net.malinowski.travelagency.data.entity.User;
-import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
+
+import java.io.File;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -41,15 +42,18 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendBookingMessage(Booking booking) {
+    public void sendBookingMessage(Booking booking, String pdfPath) {
         String header = booking.getCustomer().getFirstName() + " gratulujemy udanej rezerwacji!";
         String title = "Rezerwacja podróży " + booking.getTrip().getTitle();
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setTo(booking.getCustomer().getEmail());
             messageHelper.setSubject("Rezerwacja podróży " + booking.getTrip().getTitle());
             messageHelper.setText(mailBuilder.buildBookingMail(header, title, booking), true);
+
+            FileSystemResource file = new FileSystemResource(new File(pdfPath));
+            messageHelper.addAttachment(file.getFilename(), file);
         };
         javaMailSender.send(messagePreparator);
     }
