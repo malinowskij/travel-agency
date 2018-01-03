@@ -8,6 +8,7 @@
     <script th:src="@{/js/jquery-ui.js}"/>
     <script th:src="@{/js/creator-date-picker.js}"/>
     <script th:src="@{/js/address-ajax.js}"/>
+    <script th:src="@{/js/attraction-ajax.js}"/>
 </head>
 <body>
 
@@ -102,8 +103,12 @@
                                 <td th:text="${#dates.format(schedule.date, 'dd-MM-yyyy')}"></td>
                                 <td th:text="${schedule.description}"></td>
                                 <td>
-                                    <ul>
-                                        <li th:each="attr : ${schedule.attractions}" th:text="${attr.name}"/>
+                                    <ul class="list-group">
+                                        <li th:each="attr : ${schedule.attractions}"
+                                            data-toggle="popover" title="Opis atrakcji" data-trigger="hover"
+                                            data-placement="right"
+                                            th:attr="data-content=${attr.description}"
+                                            th:text="${attr.name}" class="list-group-item"/>
                                     </ul>
                                 </td>
                             </tr>

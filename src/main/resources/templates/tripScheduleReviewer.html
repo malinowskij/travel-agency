@@ -8,6 +8,7 @@
     <script th:src="@{/js/jquery-ui.js}"/>
     <script th:src="@{/js/creator-date-picker.js}"/>
     <script th:src="@{/js/address-ajax.js}"/>
+    <script th:src="@{/js/attraction-ajax.js}"/>
 </head>
 <body>
 
@@ -57,13 +58,14 @@
                             </div>
 
                             <div class="form-group">
-                                <div th:each="attraction : ${attractionList}">
-                                    <div class="col-md-4">
-                                        <input type="checkbox" th:field="*{schedule.attractions}"
-                                               th:value="${attraction.id}"
-                                               th:text="${attraction.name}" class="checkbox-inline"/>
-                                    </div>
-                                </div>
+                                Atrakcje (aby wybrać kilka przytrzymaj CTRL i klikaj)
+                                <select multiple="multiple" size="8" id="attrSelect"
+                                        th:field="*{schedule.attractions}" class="form-control">
+                                    <option th:each="attraction : ${attractionList}"
+                                            th:value="${attraction.id}"
+                                            th:text="${attraction.name + '(' + attraction.description + ')'}">
+                                    </option>
+                                </select>
                             </div>
 
                             <input type="submit" class="btn btn-theme btn-block" value="Dodaj"/>
@@ -75,6 +77,24 @@
                 <a th:href="@{/admin/dashboard}" class="btn btn-theme btn-block">
                     Zakończ tworzenie planu
                 </a>
+            </div>
+        </div>
+        <div class="row centered">
+            <div class="col-lg-4 col-lg-offset-4">
+                <form th:action="@{/admin/attraction}" th:object="${attraction}" id="attractionForm" method="POST">
+                    <h2>Brak atrakcji? Dodaj kolejną!</h2>
+                    <div class="form-group">
+                        <input type="text" id="attrName" class="form-control" placeholder="Nazwa atrakcji" th:field="*{name}"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="attrDesc" placeholder="Opis atrakcji" class="form-control" th:field="*{description}"
+                                  form="attractionForm"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Dodaj atrakcję"
+                               class="btn btn-theme btn-block"/>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

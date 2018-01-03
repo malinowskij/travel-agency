@@ -104,6 +104,7 @@ public class TripController {
     @GetMapping("/admin/trip/creator/schedule/{tripId}")
     public String tripScheduleCreator(@PathVariable("tripId") Trip trip, Model model) {
         tripService.checkTripBeforeOperation(trip);
+        model.addAttribute("attraction", new Attraction());
         model.addAttribute("trip", trip);
         model.addAttribute("daysCount", DateUtil.daysBetween(trip.getStartDate(), trip.getEndDate()));
         model.addAttribute("scheduleForm", new ScheduleForm());
