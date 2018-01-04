@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     private UserService userService;
@@ -59,6 +61,8 @@ public class UserController {
         user = userService.save(user);
         emailService.sendWelcomeMessage(user);
 
+        log.info("USER REGISTER ID = " + user.getId());
+
         return "redirect:/login";
     }
 
@@ -90,6 +94,9 @@ public class UserController {
         address = addressService.save(address);
         User user = userService.getLoggedInUser();
         userService.updateAddress(address.getId(), user.getId());
+
+        log.info("USER ID = " + user.getId() + " UPDATE ADDRESS");
+
         return "redirect:/user/profile";
     }
 
@@ -110,7 +117,10 @@ public class UserController {
         if (result.hasErrors())
             return "editUserForm";
 
-        userService.save(userService.mapEditUserFormToUser(form));
+        User user = userService.save(userService.mapEditUserFormToUser(form));
+
+        log.info("USER ID = " + user.getId() + " EDIT PROFILE");
+
         return "redirect:/user/profile";
     }
 }
