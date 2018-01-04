@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller.advice;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalAdviceController {
 
     @ExceptionHandler({HttpSessionRequiredException.class})
@@ -28,6 +30,9 @@ public class GlobalAdviceController {
     @ExceptionHandler({TripHasNotFreePlaces.class})
     public String handleErrorWhileBookingNotFreePlaces(TripHasNotFreePlaces ex) {
         Booking booking = ex.getBooking();
+
+        log.info("BOOKING ID = " + booking.getId() + " HAS NOT FREE PLACES");
+
         if (booking.getPeopleQuantity() > 4) booking.setPeopleQuantity(4);
         return "redirect:/trip/search?country=" + booking.getTrip().getDestinationCountry().getId()
                 + "&startDate=" + DateUtil.formatDate(booking.getTrip().getStartDate())

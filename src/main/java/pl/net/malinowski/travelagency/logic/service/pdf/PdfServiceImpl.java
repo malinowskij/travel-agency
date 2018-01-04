@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageException;
 import pl.net.malinowski.travelagency.data.entity.Booking;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class PdfServiceImpl implements PdfService {
 
     private final Path rootLocation = Paths.get("pdf-dir");
@@ -36,6 +38,7 @@ public class PdfServiceImpl implements PdfService {
     public void init() {
         try {
             Files.createDirectories(rootLocation);
+            log.info("INITIALIZE PDF-STORAGE " + rootLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
@@ -53,7 +56,11 @@ public class PdfServiceImpl implements PdfService {
             addTitlePage(document, booking);
 
             document.close();
+
+            log.info("Pdf document created for booking.id = " + booking.getId() + " and customer " +
+                    booking.getCustomer().getEmail() + " pdf filename = " + fileName);
         } catch (DocumentException | FileNotFoundException e) {
+            log.error("Could not create pdf document " + fileName);
             throw new StorageException("Could not create pdf document " + fileName);
         }
 
@@ -109,7 +116,7 @@ public class PdfServiceImpl implements PdfService {
         table.addCell("Podroz: ");
         table.addCell(booking.getTrip().getTitle() + ", "
                 + booking.getTrip().getDestinationCountry().getName() +
-            ", " + booking.getTrip().getDestinationCity().getName());
+                ", " + booking.getTrip().getDestinationCity().getName());
 
         table.addCell("Data: ");
         table.addCell("od " + booking.getTrip().getStartDate() + " do " + booking.getTrip().getEndDate());
@@ -134,8 +141,7 @@ public class PdfServiceImpl implements PdfService {
                     .multiply(BigDecimal.valueOf(booking.getPeopleQuantity()));
 
             table.addCell(String.valueOf(normalPrice.add(allInclusivePrice)) + " PLN");
-        }
-        else
+        } else
             table.addCell(String.valueOf(normalPrice) + " PLN");
 
         document.add(table);

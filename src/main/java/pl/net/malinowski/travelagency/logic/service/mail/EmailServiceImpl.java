@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.logic.service.mail;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,6 +14,7 @@ import pl.net.malinowski.travelagency.data.entity.User;
 import java.io.File;
 
 @Service
+@Slf4j
 public class EmailServiceImpl implements EmailService {
 
     private JavaMailSender javaMailSender;
@@ -38,6 +40,8 @@ public class EmailServiceImpl implements EmailService {
                     header, title, description), true);
         };
         javaMailSender.send(messagePreparator);
+
+        log.info("WELCOME EMAIL SENT TO USER ID = " + user.getId() + " email = " + user.getEmail());
     }
 
     @Async
@@ -56,6 +60,9 @@ public class EmailServiceImpl implements EmailService {
             messageHelper.addAttachment(file.getFilename(), file);
         };
         javaMailSender.send(messagePreparator);
+
+        log.info("BOOKING MAIL SENT Booking.id = " + booking.getId() +
+                " TO USER User.id = " + booking.getCustomer().getId() + " email = " + booking.getCustomer().getEmail());
     }
 
     @Async
@@ -71,5 +78,8 @@ public class EmailServiceImpl implements EmailService {
             messageHelper.setText(mailBuilder.buildBookingCancelMail(header, title, booking), true);
         };
         javaMailSender.send(messagePreparator);
+
+        log.info("BOOKING CANCEL MAIL SENT Booking.id = " + booking.getId() +
+                " TO USER User.id = " + booking.getCustomer().getId() + " email = " + booking.getCustomer().getEmail());
     }
 }
