@@ -111,6 +111,9 @@ public class BookingController {
 
         b = bookingService.update(b, prevQuantity);
 
+        String pdfPath = pdfService.generatePdfForBooking(b);
+        emailService.sendBookingMessage(b, pdfPath);
+
         session.removeAttribute("orgBooking");
 
         log.info("BOOKING EDITED BY USER ID = " + b.getCustomer().getId() + " BOOKING ID = " + b.getId());
