@@ -10,15 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.data.entity.Attraction;
 import pl.net.malinowski.travelagency.data.entity.Booking;
+import pl.net.malinowski.travelagency.data.entity.PdfFile;
 import pl.net.malinowski.travelagency.data.entity.User;
 import pl.net.malinowski.travelagency.logic.service.interfaces.AttractionService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
+import pl.net.malinowski.travelagency.logic.service.interfaces.PdfFileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.UserService;
 import pl.net.malinowski.travelagency.logic.service.mail.EmailService;
 import pl.net.malinowski.travelagency.logic.service.pdf.PdfService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -31,15 +34,17 @@ public class BookingController {
     private EmailService emailService;
     private final AttractionService attractionService;
     private final PdfService pdfService;
+    private final PdfFileService pdfFileService;
 
     @Autowired
     public BookingController(BookingService bookingService, UserService userService,
-                             EmailService emailService, AttractionService attractionService, PdfService pdfService) {
+                             EmailService emailService, AttractionService attractionService, PdfService pdfService, PdfFileService pdfFileService) {
         this.bookingService = bookingService;
         this.userService = userService;
         this.emailService = emailService;
         this.attractionService = attractionService;
         this.pdfService = pdfService;
+        this.pdfFileService = pdfFileService;
     }
 
     @ModelAttribute("attractionList")
@@ -71,6 +76,7 @@ public class BookingController {
         booking = bookingService.save(booking);
         String pdfPath = pdfService.generatePdfForBooking(booking);
         emailService.sendBookingMessage(booking, pdfPath);
+        pdfFileService.save(new PdfFile(pdfPath, new Date(), booking));
 
         log.info("BOOKING CREATED BY USER ID = " + booking.getCustomer().getId() + " BOOKING ID = " + booking.getId());
 
@@ -110,6 +116,10 @@ public class BookingController {
         b.setAllInclusive(booking.isAllInclusive());
 
         b = bookingService.update(b, prevQuantity);
+
+        String pdfPath = pdfService.generatePdfForBooking(b);
+        emailService.sendBookingMessage(b, pdfPath);
+        pdfFileService.save(new PdfFile(pdfPath, new Date(), booking));
 
         session.removeAttribute("orgBooking");
 
