@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import pl.net.malinowski.travelagency.logic.service.interfaces.TripService;
 import javax.validation.Valid;
 
 @Controller
+@Slf4j
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -38,6 +40,8 @@ public class ScheduleController {
         Trip trip = schedule.getTrip();
         trip.getSchedules().add(schedule);
         tripService.save(trip);
+
+        log.info("SCHEDULE CREATED ID = " + schedule.getId() + " TO TRIP ID = " + scheduleForm.getSchedule().getTrip().getId());
 
         return "redirect:/admin/trip/creator/schedule/" + scheduleForm.getSchedule().getTrip().getId();
     }

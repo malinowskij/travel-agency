@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.logic.service.file;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
@@ -22,6 +23,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class FileServiceImpl implements FileService {
 
     private final Path rootLocation = Paths.get("upload-dir");
@@ -30,6 +32,7 @@ public class FileServiceImpl implements FileService {
     public void init() {
         try {
             Files.createDirectories(rootLocation);
+            log.info("INITIALIZE STORAGE " + rootLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
@@ -45,7 +48,10 @@ public class FileServiceImpl implements FileService {
                 throw new StorageException("Cannot store file with relative path outside current dir");
             Files.copy(file.getInputStream(), this.rootLocation.resolve(filename),
                     StandardCopyOption.REPLACE_EXISTING);
+
+            log.info("STORE FILE " + filename);
         } catch (IOException e) {
+            log.error("FAILED TO STORE FILE " + filename);
             throw new StorageException("Failed to store file " + filename, e);
         }
         return filename;
