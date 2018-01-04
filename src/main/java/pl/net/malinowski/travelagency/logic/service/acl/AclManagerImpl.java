@@ -32,6 +32,7 @@ public class AclManagerImpl implements AclManager {
         MutableAcl acl = findAcl(oi);
 
         try {
+            log.info("INSERT ACL (PERMISSION) to " + clazz.getSimpleName() + " id = " + identifier);
             acl.insertAce(acl.getEntries().size(), permission, sid, true);
             aclService.updateAcl(acl);
         } catch (RuntimeException ignored) {
@@ -52,7 +53,9 @@ public class AclManagerImpl implements AclManager {
         ObjectIdentity oi = new ObjectIdentityImpl(clazz, identifier);
         MutableAcl acl = findAcl(oi);
 
+
         try {
+            log.info("INSERT ACL (FULL PERMISSION) to " + clazz.getSimpleName() + " id = " + identifier);
             acl.insertAce(0, BasePermission.ADMINISTRATION, sid, true);
             acl.insertAce(1, BasePermission.DELETE, sid, true);
             acl.insertAce(2, BasePermission.WRITE, sid, true);
@@ -70,5 +73,6 @@ public class AclManagerImpl implements AclManager {
     public <T> void removeFullPermissions(Class<T> clazz, Long identifier, Sid sid) {
         ObjectIdentity identity = new ObjectIdentityImpl(clazz.getCanonicalName(), identifier.toString());
         aclService.deleteAcl(identity, true);
+        log.info("DELETE ACL (FULL PERMISSION) to " + clazz.getSimpleName() + " id = " + identifier);
     }
 }
