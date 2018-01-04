@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/booking")
+@Slf4j
 public class BookingController {
 
     private BookingService bookingService;
@@ -70,6 +72,8 @@ public class BookingController {
         String pdfPath = pdfService.generatePdfForBooking(booking);
         emailService.sendBookingMessage(booking, pdfPath);
 
+        log.info("BOOKING CREATED BY USER ID = " + booking.getCustomer().getId() + " BOOKING ID = " + booking.getId());
+
         return "redirect:/user/profile";
     }
 
@@ -108,6 +112,9 @@ public class BookingController {
         b = bookingService.update(b, prevQuantity);
 
         session.removeAttribute("orgBooking");
+
+        log.info("BOOKING EDITED BY USER ID = " + b.getCustomer().getId() + " BOOKING ID = " + b.getId());
+
         return "redirect:/user/profile";
     }
 
@@ -116,6 +123,8 @@ public class BookingController {
     public String cancelBooking(@PathVariable("id") Booking booking) {
         bookingService.cancelBooking(booking);
         emailService.sendCancelBookingMessage(booking);
+
+        log.info("BOOKING ID = " + booking.getId() + " WAS CANCELED BY " + booking.getCustomer().getId());
 
         return "redirect:/user/profile";
     }

@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Controller
 @SessionAttributes({"countries", "search", "featureList", "driveList", "attractionList"})
+@Slf4j
 public class TripController {
 
     private CountryService countryService;
@@ -96,6 +98,8 @@ public class TripController {
         }
 
         trip = tripService.save(trip);
+
+        log.info("TRIP CREATED ID = " + trip.getId());
 
         return "redirect:/admin/trip/creator/schedule/" + trip.getId();
     }

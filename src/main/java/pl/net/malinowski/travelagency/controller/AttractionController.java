@@ -1,5 +1,6 @@
 package pl.net.malinowski.travelagency.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/attraction")
+@Slf4j
 public class AttractionController {
 
     private final AttractionService attractionService;
@@ -37,6 +39,10 @@ public class AttractionController {
         if (result.hasErrors())
             throw new RuntimeException("attracton Api post Exception (validation)");
 
-        return attractionService.save(attraction);
+        attraction = attractionService.save(attraction);
+
+        log.info("ATTRACTION CREATED ID = " + attraction.getId());
+
+        return attraction;
     }
 }
