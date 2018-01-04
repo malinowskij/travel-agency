@@ -1,6 +1,7 @@
 package pl.net.malinowski.travelagency.controller.advice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
@@ -49,6 +50,11 @@ public class GlobalAdviceController {
     public String handleAccessDeniedException(Model model) {
         model.addAttribute("message", "Przykro nam ale nie masz dostępu do zasobu, którego żądasz!");
         return "/errors/alertError";
+    }
+
+    @ExceptionHandler({TypeMismatchException.class})
+    public String typeMismatch() {
+        return "index";
     }
 
     @ExceptionHandler({CannotMakeOperationOnTripException.class})

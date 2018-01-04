@@ -13,6 +13,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
+import java.util.Properties;
 
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
@@ -37,5 +40,19 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         MethodValidationPostProcessor methodValidationPostProcessor = new MethodValidationPostProcessor();
         methodValidationPostProcessor.setValidator(validator());
         return methodValidationPostProcessor;
+    }
+
+    @Bean
+    public SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
+        SimpleMappingExceptionResolver res = new SimpleMappingExceptionResolver();
+        Properties map = new Properties();
+        map.setProperty(Exception.class.getSimpleName(), "exception");
+
+        res.setExceptionMappings(map);
+        res.setDefaultErrorView("index");
+        res.setExceptionAttribute("OtherExceptions");
+        res.setWarnLogCategory("warn");
+
+        return res;
     }
 }
