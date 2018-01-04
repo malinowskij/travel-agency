@@ -12,25 +12,25 @@
 <div id="service">
     <div class="container">
 
-        <div class="row centered">
-            <div class="col-lg-6 col-lg-offset-3">
+        <div class="row">
+            <div class="col-md-6">
                 <h2>Szczegóły rezerwacji: </h2>
                 <table class="table table-responsive">
                     <tbody>
                     <tr>
-                        <td>Data rezerwacji: </td>
+                        <td>Data rezerwacji:</td>
                         <td th:text="${#dates.format(booking.bookingDate, 'dd-MM-yyyy hh:mm:ss')}"></td>
                     </tr>
                     <tr>
-                        <td>Rezerwujący: </td>
+                        <td>Rezerwujący:</td>
                         <td th:text="${booking.customer.firstName + ' ' + booking.customer.lastName}"/>
                     </tr>
                     <tr>
-                        <td>Liczba osób: </td>
+                        <td>Liczba osób:</td>
                         <td th:text="${booking.peopleQuantity}"/>
                     </tr>
                     <tr>
-                        <td>Cena podstawowa (wszyscy): </td>
+                        <td>Cena podstawowa (wszyscy):</td>
                         <td th:text="${booking.trip.tripPrice * booking.peopleQuantity + 'zł'}"/>
                     </tr>
                     <tr>
@@ -42,14 +42,38 @@
                         <td th:text="${booking.peopleQuantity * booking.trip.allInclusivePrice + 'zł'}"/>
                     </tr>
                     <tr>
-                        <td>Koszt ostateczny: </td>
-                        <td th:if="${booking.allInclusive}" th:text="${booking.getPeopleQuantity() * booking.trip.allInclusivePrice + booking.getPeopleQuantity() * booking.trip.tripPrice + 'zł'}"/>
-                        <td th:if="${!booking.allInclusive}" th:text="${booking.getPeopleQuantity() * booking.trip.tripPrice + 'zł'}"/>
+                        <td>Koszt ostateczny:</td>
+                        <td th:if="${booking.allInclusive}"
+                            th:text="${booking.getPeopleQuantity() * booking.trip.allInclusivePrice + booking.getPeopleQuantity() * booking.trip.tripPrice + 'zł'}"/>
+                        <td th:if="${!booking.allInclusive}"
+                            th:text="${booking.getPeopleQuantity() * booking.trip.tripPrice + 'zł'}"/>
                     </tr>
                     <tr>
                         <td colspan="2">
                             <a th:href="@{/trip/{id}(id=${booking.trip.id})}">
                                 Szczegóły podróży
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2>Dokumenty dotyczące rezerwacji: </h2>
+                <table class="table table-responsive">
+                    <thead>
+                    <th>Nazwa dokumentu</th>
+                    <th>Data utworzenia</th>
+                    <th>Pobierz</th>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pdf : ${booking.pdfFiles}">
+                        <td th:text="${#strings.substring(pdf.path, 8, pdf.path.length())}"></td>
+                        <td th:text="${#dates.format(pdf.created, 'dd-MM-yyyy hh:mm:ss')}"></td>
+                        <td>
+                            <a th:href="@{/download/{id}(id=${pdf.getId()})}"
+                               class="btn btn-theme btn-block">
+                                Pobierz
                             </a>
                         </td>
                     </tr>

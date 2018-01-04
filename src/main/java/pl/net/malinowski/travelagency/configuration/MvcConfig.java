@@ -41,18 +41,4 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         methodValidationPostProcessor.setValidator(validator());
         return methodValidationPostProcessor;
     }
-
-    @Bean
-    public SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
-        SimpleMappingExceptionResolver res = new SimpleMappingExceptionResolver();
-        Properties map = new Properties();
-        map.setProperty(Exception.class.getSimpleName(), "exception");
-
-        res.setExceptionMappings(map);
-        res.setDefaultErrorView("index");
-        res.setExceptionAttribute("OtherExceptions");
-        res.setWarnLogCategory("warn");
-
-        return res;
-    }
 }

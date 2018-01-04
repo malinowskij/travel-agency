@@ -7,9 +7,11 @@ import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.net.malinowski.travelagency.controller.exceptions.StorageException;
+import pl.net.malinowski.travelagency.controller.exceptions.StorageNotFoundException;
 import pl.net.malinowski.travelagency.data.entity.Booking;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,6 +67,15 @@ public class PdfServiceImpl implements PdfService {
         }
 
         return rootLocation + "/" + fileName;
+    }
+
+    @Override
+    public File getFile(String pdfPath) {
+        File file = new File(pdfPath);
+        if (!file.exists())
+            throw new StorageNotFoundException("PDF NOT FOUND EXCEPTION WITH NAME " + pdfPath);
+
+        return file;
     }
 
     private void addMetaData(Document document, Booking booking) {

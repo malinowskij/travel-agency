@@ -26,4 +26,10 @@ public class PdfFile {
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
+
+    public PdfFile(String path, Date created, Booking booking) {
+        this.path = path;
+        this.created = created;
+        this.booking = booking;
+    }
 }
