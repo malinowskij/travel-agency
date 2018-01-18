@@ -41,7 +41,7 @@ public interface TripRepository extends PagingAndSortingRepository<Trip, Long> {
             "AND " +
             "(t.startDate >= date(?2) AND t.endDate <= date(?3)) " +
             "AND " +
-            "(t.tripPrice >= ?4 AND t.tripPrice <= ?5)")
+            "(t.tripPrice >= ?4 AND t.tripPrice <= ?5) ORDER BY t.startDate DESC")
     Page<Trip> findByManyFields(String phrase, String from, String to, BigDecimal priceMin, BigDecimal priceMax, Pageable pageable);
 
     @Query(value = "SELECT trips.* FROM trips " +

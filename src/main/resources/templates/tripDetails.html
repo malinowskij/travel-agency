@@ -4,15 +4,133 @@
 <head>
     <title>Wybrana podróż!</title>
     <div th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
     <script th:src="@{/js/jquery-ui.js}"/>
     <script th:src="@{/js/creator-date-picker.js}"/>
     <script th:src="@{/js/address-ajax.js}"/>
+    <script th:src="@{/js/jquery.slides.min.js}"/>
     <script th:src="@{/js/attraction-ajax.js}"/>
+
+    <style>
+        #slides {
+            display:none;
+        }
+
+        a.slidesjs-next,
+        a.slidesjs-previous,
+        a.slidesjs-play,
+        a.slidesjs-stop {
+            background-image: url(img/btns-next-prev.png);
+            background-repeat: no-repeat;
+            display:block;
+            width:12px;
+            height:18px;
+            overflow: hidden;
+            text-indent: -9999px;
+            float: left;
+            margin-right:5px;
+        }
+
+        a.slidesjs-next {
+            margin-right:10px;
+            background-position: -12px 0;
+        }
+
+        a:hover.slidesjs-next {
+            background-position: -12px -18px;
+        }
+
+        a.slidesjs-previous {
+            background-position: 0 0;
+        }
+
+        a:hover.slidesjs-previous {
+            background-position: 0 -18px;
+        }
+
+        a.slidesjs-play {
+            width:15px;
+            background-position: -25px 0;
+        }
+
+        a:hover.slidesjs-play {
+            background-position: -25px -18px;
+        }
+
+        a.slidesjs-stop {
+            width:18px;
+            background-position: -41px 0;
+        }
+
+        a:hover.slidesjs-stop {
+            background-position: -41px -18px;
+        }
+
+
+        .slidesjs-pagination {
+            margin: 7px 0 0;
+            float: right;
+            list-style: none;
+        }
+
+        .slidesjs-pagination li {
+            float: left;
+            margin: 0 1px;
+        }
+
+        .slidesjs-pagination li a {
+            display: block;
+            width: 13px;
+            height: 0;
+            padding-top: 13px;
+            background-image: url(img/pagination.png);
+            background-position: 0 0;
+            float: left;
+            overflow: hidden;
+        }
+
+        .slidesjs-pagination li a.active,
+        .slidesjs-pagination li a:hover.active {
+            background-position: 0 -13px
+        }
+
+        .slidesjs-pagination li a:hover {
+            background-position: 0 -26px
+        }
+
+        #slides a:link,
+        #slides a:visited {
+            color: #333
+        }
+
+        #slides a:hover,
+        #slides a:active {
+            color: #9e2020
+        }
+    </style>
+
+    <script>
+        $(function(){
+            $("#slides").slidesjs({
+                width: 750,
+                height: 400,
+                play: {
+                    active: true,
+                    effect: "slide",
+                    interval: 5000,
+                    auto: true,
+                    navigation: false
+                },
+                navigation: {
+                    active: false
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 
 <div th:replace="fragments/header :: header"/>
+
 <div id="service">
     <div class="container">
         <div class="row">
@@ -22,13 +140,27 @@
                 <img th:if="${trip.photoPath == null}" src="http://via.placeholder.com/800x350"
                      class="rounded img-responsive"/>
 
-                <img th:if="${trip.photoPath != null}" th:src="@{/file/{filename}(filename=${trip.photoPath})}"
+                <img th:if="${trip.photoPath != null and #lists.isEmpty(trip.photos)}"
+                     th:src="@{/file/{filename}(filename=${trip.photoPath})}"
                      class="img-responsive rounded" style="max-width: 750px;"/>
+
+                <div th:if="${!#lists.isEmpty(trip.photos)}">
+                    <div id="slides">
+                            <img th:if="${trip.photoPath != null}"
+                                 th:src="@{/file/{filename}(filename=${trip.photoPath})}"
+                                 class="img-responsive rounded" style="max-width: 750px;"/>
+
+                            <img th:each="photo : ${trip.photos}" th:src="@{/file/{filename}(filename=${photo.path})}"
+                                 style="max-width: 750px;"/>
+                    </div>
+                </div>
 
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home">Podstawowe informacje</a></li>
                     <li><a data-toggle="tab" href="#menu1">Cechy podróży</a></li>
                     <li><a data-toggle="tab" href="#menu2">Atrakcje i plany</a></li>
+                    <li th:if="${!#lists.isEmpty(trip.photos)}"><a data-toggle="tab" href="#gallery">Więcej zdjęć</a>
+                    </li>
                 </ul>
 
                 <div class="tab-content">
@@ -83,11 +215,28 @@
                             </li>
                         </ul>
                     </div>
+                    <div id="gallery" class="tab-pane fade">
+                        <h3>Więcej zdjęć:</h3>
+                        <div class="row text-center text-lg-left">
+                            <div th:each="photo : ${trip.photos}">
+                                <div class="col-lg-3 col-md-4 col-xs-6">
+                                    <a href="#" class="d-block mb-4 h-100">
+                                        <img class="img-fluid img-thumbnail"
+                                             th:src="@{/file/{filename}(filename=${photo.path})}" alt="img"/>
+                                    </a>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
                     <div id="menu2" class="tab-pane fade">
                         <h3>Atrakcje i plany</h3>
                         <div th:if="${#lists.isEmpty(trip.schedules)}">
                             <div class="alert alert-info">
-                                Brak planu podróży! Wygląda na to, że sam będziesz decydował o tym co robisz na wycieczce :)
+                                Brak planu podróży! Wygląda na to, że sam będziesz decydował o tym co robisz na
+                                wycieczce :)
                             </div>
                         </div>
                         <table th:if="${!#lists.isEmpty(trip.schedules)}" class="table table-responsive">
@@ -152,11 +301,11 @@
                                 <input type="hidden" th:value="${trip.id}" name="tripId" id="tripId"/>
                             </tr>
                             <tr>
-                                <td>Podstawowa cena: </td>
+                                <td>Podstawowa cena:</td>
                                 <td th:text="${trip.tripPrice} + 'zł/os'"></td>
                             </tr>
                             <tr th:if="${trip.allInclusiveAvailable}">
-                                <td>Dodatkowa cena all inclusive: </td>
+                                <td>Dodatkowa cena all inclusive:</td>
                                 <td th:text="${trip.allInclusivePrice} + 'zł/os'"></td>
                             </tr>
                             <tr>

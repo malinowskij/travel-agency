@@ -92,6 +92,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public void canBook(Booking booking) {
+        if (DateUtil.getTodayFormatted().after(booking.getTrip().getStartDate()))
+            throw new TooLateForBookingManipulateException();
+    }
+
+    @Override
     public Long countBookingsByTripId(Long tripId) {
         return bookingRepository.countByTripId(tripId);
     }
