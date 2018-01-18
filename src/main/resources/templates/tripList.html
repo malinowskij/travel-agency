@@ -86,7 +86,9 @@
                                 </div>
                             </td>
                             <td>
-                                <h4 th:text="${trip.title}"></h4>
+                                <a th:href="@{/trip/{tripId}(tripId=${trip.id})}">
+                                    <h4 th:text="${trip.title}"></h4>
+                                </a>
                             </td>
                             <td>
                                 Początek: <span th:text="${trip.startDate}"/> <br/>
@@ -104,22 +106,29 @@
                                   th:text="${trip.tripPrice} + 'zł/os'"/>
                             </td>
                             <td>
-                                <a th:href="@{/admin/trip/edit/{tripId}(tripId=${trip.id})}" class="btn btn-theme btn-block"
+                                <a th:href="@{/admin/trip/edit/{tripId}(tripId=${trip.id})}"
+                                   class="btn btn-theme btn-block"
                                    data-toggle="popover" title="Zmiana" data-trigger="hover" data-placement="left"
                                    data-content="Możliwe przed rozpoczęciem oraz przy braku rezerwacji">
                                     Zmień
                                 </a>
-                                <a th:href="@{/admin/trip/creator/schedule/{tripId}(tripId=${trip.id})}" class="btn btn-theme btn-block"
+                                <a th:href="@{/admin/trip/creator/schedule/{tripId}(tripId=${trip.id})}"
+                                   class="btn btn-theme btn-block"
                                    data-toggle="popover" title="Zamiana planu" data-trigger="hover"
                                    data-placement="left"
                                    data-content="Zmiana możliwa jedynie przed rozpoczęciem podróży">
                                     Zarządzaj planem
                                 </a>
-                                <a th:href="@{/admin/trip/cancel/{tripId}(tripId=${trip.id})}" class="btn btn-theme btn-block"
+                                <a th:href="@{/admin/trip/cancel/{tripId}(tripId=${trip.id})}"
+                                   class="btn btn-theme btn-block"
                                    data-toggle="popover" title="Anulowanie podróży" data-trigger="hover"
                                    data-placement="left"
                                    data-content="Możliwe przed rozpoczęciem oraz przy braku rezerwacji">
                                     Anuluj
+                                </a>
+                                <a th:href="@{/admin/trip/photo/{tripId}(tripId=${trip.id})}"
+                                   class="btn btn-theme btn-block">
+                                    Dodaj zdjęcie
                                 </a>
                             </td>
                         </tr>

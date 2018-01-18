@@ -19,6 +19,8 @@ public interface BookingService {
 
     void checkIfOperationIsAvailable(Booking booking);
 
+    void canBook(Booking booking);
+
     Long countBookingsByTripId(Long tripId);
 
     void cancelBooking(Booking booking);

@@ -1,6 +1,5 @@
 package pl.net.malinowski.travelagency.logic.service.implementations;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +8,9 @@ import pl.net.malinowski.travelagency.controller.commands.TripAdvancedSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.exceptions.CannotMakeOperationOnTripException;
 import pl.net.malinowski.travelagency.controller.exceptions.TripCreationException;
+import pl.net.malinowski.travelagency.data.entity.Photo;
 import pl.net.malinowski.travelagency.data.entity.Trip;
+import pl.net.malinowski.travelagency.data.repository.PhotoRepository;
 import pl.net.malinowski.travelagency.data.repository.TripRepository;
 import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.BookingService;
@@ -26,11 +27,13 @@ public class TripServiceImpl implements TripService {
 
     private TripRepository tripRepository;
     private BookingService bookingService;
+    private final PhotoRepository photoRepository;
     private final FileService fileService;
 
     @Autowired
-    public TripServiceImpl(TripRepository tripRepository, FileService fileService) {
+    public TripServiceImpl(TripRepository tripRepository, PhotoRepository photoRepository, FileService fileService) {
         this.tripRepository = tripRepository;
+        this.photoRepository = photoRepository;
         this.fileService = fileService;
     }
 
@@ -107,5 +110,10 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<Trip> findLastMinuteOffers() {
         return tripRepository.findLastMinuteTrips(DateUtil.getTodayFormatted());
+    }
+
+    @Override
+    public Photo savePhoto(Photo photo){
+        return photoRepository.save(photo);
     }
 }

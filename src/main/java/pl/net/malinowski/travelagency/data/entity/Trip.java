@@ -64,6 +64,8 @@ public class Trip {
             inverseJoinColumns = @JoinColumn(name = "schedule_id"))
     private Set<Schedule> schedules;
 
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Photo> photos;
 
     @Column(name = "photo_path")
     private String photoPath;

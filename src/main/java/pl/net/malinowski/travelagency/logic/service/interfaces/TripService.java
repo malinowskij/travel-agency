@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import pl.net.malinowski.travelagency.controller.commands.PhraseSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripAdvancedSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
+import pl.net.malinowski.travelagency.data.entity.Photo;
 import pl.net.malinowski.travelagency.data.entity.Trip;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface TripService {
     void setBookingService(BookingService bookingService);
 
     List<Trip> findLastMinuteOffers();
+
+    Photo savePhoto(Photo photo);
 }

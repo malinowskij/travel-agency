@@ -61,6 +61,7 @@ public class BookingController {
 
         User usr = userService.getLoggedInUser();
         Booking booking = bookingService.buildBooking(search, usr);
+        bookingService.canBook(booking);
         model.addAttribute("booking", booking);
         model.addAttribute("user", usr);
 

@@ -2,6 +2,7 @@ package pl.net.malinowski.travelagency.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.net.malinowski.travelagency.controller.commands.ScheduleForm;
+import pl.net.malinowski.travelagency.controller.commands.SingleTripPhoto;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
 import pl.net.malinowski.travelagency.data.entity.*;
@@ -154,5 +156,29 @@ public class TripController {
         model.addAttribute("cities", cityService.findById(trip.getDestinationCity().getId()));
         model.addAttribute("tripWithFile", twf);
         return "tripCreatorForm";
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/admin/trip/photo/{id}")
+    public String addPhotoForm(@PathVariable("id") Trip trip, Model model) {
+        if (trip != null) {
+            model.addAttribute(new SingleTripPhoto());
+            model.addAttribute(trip);
+            return "singlePhotoForm";
+        }
+
+        throw new AccessDeniedException("Deny for not exists trip");
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("/admin/trip/photo")
+    public String processPhotoForm(@Valid @ModelAttribute SingleTripPhoto tripPhoto, BindingResult result) {
+        if (result.hasErrors())
+            return "singlePhotoForm";
+
+        Photo photo = new Photo(fileService.store(tripPhoto.getFile()), tripService.findById(tripPhoto.getTripId()));
+        tripService.savePhoto(photo);
+
+        return "redirect:/admin/trip";
     }
 }
