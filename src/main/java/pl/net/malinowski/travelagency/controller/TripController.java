@@ -137,11 +137,9 @@ public class TripController {
                               HttpServletResponse response) {
 
         Cookie cookie = cookieService.addLastSearchTripsCookie(request, trip);
-        if (cookie != null) {
-            cookie.setPath("/");
-            cookie.setDomain("localhost");
+        if (cookie != null)
             response.addCookie(cookie);
-        }
+
 
         model.addAttribute("trip", trip);
         return "tripDetails";

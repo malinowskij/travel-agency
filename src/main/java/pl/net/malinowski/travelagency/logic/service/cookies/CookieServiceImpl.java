@@ -46,6 +46,8 @@ public class CookieServiceImpl implements CookieService {
 
             cookie = new Cookie(LAST_TRIPS_SEARCH, URLEncoder.encode(mapper.writeValueAsString(tripsListCookie), "UTF-8"));
             cookie.setMaxAge(60 * 24 * 60);
+            cookie.setPath("/");
+            cookie.setDomain("localhost");
         } catch (IOException e) {
             e.printStackTrace();
         }

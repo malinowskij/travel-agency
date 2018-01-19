@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Schedule {
+public class Schedule implements Comparable<Schedule> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,5 +45,10 @@ public class Schedule {
         this.description = description;
         this.trip = trip;
         this.attractions = attractions;
+    }
+
+    @Override
+    public int compareTo(Schedule o) {
+        return date.compareTo(o.date);
     }
 }

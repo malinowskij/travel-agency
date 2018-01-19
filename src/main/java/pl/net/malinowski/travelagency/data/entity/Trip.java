@@ -11,8 +11,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "trips")
@@ -88,4 +87,9 @@ public class Trip {
     @JoinTable(name = "trips_features", joinColumns = @JoinColumn(name = "trip_id"),
             inverseJoinColumns = @JoinColumn(name = "feature_id"))
     private Set<Feature> features;
+
+    public Set<Schedule> getSchedules() {
+        schedules = new TreeSet<>(schedules);
+        return schedules;
+    }
 }
