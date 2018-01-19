@@ -17,6 +17,10 @@
 <div id="twrap">
     <div class="container">
         <div class="row">
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Info!</strong> Strona korzysta z cookies, wchodząc na nią akceptujesz politykę cookies.
+            </div>
             <div style="color: white;" class="col-lg-8 col-lg-offset-2">
                 <br/>
                 <h3>Witaj, na stronie biura podróży</h3>
@@ -88,6 +92,23 @@
                 <div th:if="${#lists.size(lastMinute) gt 5}">
                     <a class="btn btn-theme btn-block" th:href="@{/trip/lastMinute}">
                         Więcej ofert!
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div th:if="${lastWatched != null or !#lists.isEmpty(lastWatched)}" class="row">
+            <h3>Ostatnio oglądane: </h3>
+            <div th:each="trip : ${lastWatched}">
+                <div class="col-md-2">
+                    <a th:href="@{/trip/{id}(id=${trip.id})}">
+                        <div class="thumbnail">
+                            <img th:src="@{/file/{imageUUID}(imageUUID=${trip.photoPath})}"
+                                 class="rounded float-left"
+                                 style="max-height: 150px; max-width: 150px;"/>
+                            <div class="caption">
+                                <h3 th:text="${trip.title}"></h3>
+                            </div>
+                        </div>
                     </a>
                 </div>
             </div>

@@ -14,11 +14,14 @@ import pl.net.malinowski.travelagency.controller.commands.SingleTripPhoto;
 import pl.net.malinowski.travelagency.controller.commands.TripSearch;
 import pl.net.malinowski.travelagency.controller.commands.TripWithFile;
 import pl.net.malinowski.travelagency.data.entity.*;
+import pl.net.malinowski.travelagency.logic.service.cookies.CookieService;
 import pl.net.malinowski.travelagency.logic.service.file.FileService;
 import pl.net.malinowski.travelagency.logic.service.interfaces.*;
 import pl.net.malinowski.travelagency.logic.util.DateUtil;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,11 +38,12 @@ public class TripController {
     private DriveService driveService;
     private final StateService stateService;
     private final CityService cityService;
+    private final CookieService cookieService;
 
     @Autowired
     public TripController(CountryService countryService, TripService tripService,
                           AttractionService attractionService, FeatureService featureService,
-                          FileService fileService, DriveService driveService, StateService stateService, CityService cityService) {
+                          FileService fileService, DriveService driveService, StateService stateService, CityService cityService, CookieService cookieService) {
         this.countryService = countryService;
         this.tripService = tripService;
         this.attractionService = attractionService;
@@ -48,6 +52,7 @@ public class TripController {
         this.driveService = driveService;
         this.stateService = stateService;
         this.cityService = cityService;
+        this.cookieService = cookieService;
     }
 
     @ModelAttribute("countries")
@@ -119,15 +124,25 @@ public class TripController {
 
     @GetMapping("/trip/search")
     public String processTripSearching(@Valid @ModelAttribute("search") TripSearch search, Model model,
-                                       BindingResult result) {
+                                       BindingResult result, HttpServletResponse response, HttpServletRequest request) {
         if (result.hasErrors())
             return "index";
+
         model.addAttribute("tripList", tripService.searchForTrip(search));
         return "foundedTripList";
     }
 
     @GetMapping("/trip/{id}")
-    public String findOneTrip(@PathVariable("id") Trip trip, Model model) {
+    public String findOneTrip(@PathVariable("id") Trip trip, Model model, HttpServletRequest request,
+                              HttpServletResponse response) {
+
+        Cookie cookie = cookieService.addLastSearchTripsCookie(request, trip);
+        if (cookie != null) {
+            cookie.setPath("/");
+            cookie.setDomain("localhost");
+            response.addCookie(cookie);
+        }
+
         model.addAttribute("trip", trip);
         return "tripDetails";
     }
